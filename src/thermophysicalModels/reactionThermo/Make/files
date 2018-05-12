@@ -1,0 +1,5 @@
+chemistryReaders/chemistryReader/makeTabularChemistryReaders.C
+
+tabularReactionThermo/tabularReactionThermos.C
+
+LIB = $(FOAM_USER_LIBBIN)/libtabularReactionThermophysicalModels

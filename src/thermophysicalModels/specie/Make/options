@@ -1,0 +1,7 @@
+EXE_INC = \
+    -I$(FOAM_SRC)/thermophysicalModels/specie/lnInclude \
+    -I$(WM_PROJECT_USER_DIR)/src/OpenFOAM/lnInclude
+
+LIB_LIBS = \
+    -lOpenFOAM \
+    -lspecie

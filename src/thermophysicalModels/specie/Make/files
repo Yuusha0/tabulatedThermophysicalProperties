@@ -1,0 +1,3 @@
+reaction/reactions/makeTabularReactions.C
+
+LIB = $(FOAM_USER_LIBBIN)/libuserspecie
