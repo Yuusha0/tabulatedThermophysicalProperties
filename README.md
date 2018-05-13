@@ -55,6 +55,7 @@ Tabulated thermophysical properties for OpenFOAM 5.x.
 
 ## MISCELLANEOUS
 
+* heTabularThermo currently doesn't work.
 * Multi-species works but it is very slow for large tables due to OpenFOAM code design.
 * Only 1 non reactive model of multi-species is currently implemented.
 
