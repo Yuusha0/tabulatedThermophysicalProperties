@@ -2,11 +2,12 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Xavier Lamboley
+    \\  /    A nd           | Copyright (C) 2018 Yuusha and tilasoldo
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
-    This file is part of my contributions of OpenFOAM.
+    This file is part of tilasoldo and Yuusha contribution to OpenFOAM.
+    It is based on chriss85 contribution for OpenFOAM 2.3.x.
 
     OpenFOAM is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -47,13 +48,7 @@ Foam::tabularTransport<Thermo>::tabularTransport(const dictionary& dict)
     Thermo(dict),
     mu_(dict.subDict("transport").subDict("mu")),
     kappa_(dict.subDict("transport").subDict("kappa"))
-{
-
-    // mu_ = extrapolation2DTable<scalar>("constant/muTable");
-    // mu_.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
-    // kappa_ = extrapolation2DTable<scalar>("constant/kappaTable");
-    // kappa_.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -67,8 +62,6 @@ void Foam::tabularTransport<Thermo>::tabularTransport::write(Ostream& os) const
     Thermo::write(os);
 
     dictionary dict("transport");
-    //dict.add("mu", mu_);
-    //dict.add("Pr", 1.0/rPr_);
     os  << indent << dict.dictName() << dict;
 
     os  << decrIndent << token::END_BLOCK << nl;

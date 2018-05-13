@@ -2,11 +2,12 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Xavier Lamboley
+    \\  /    A nd           | Copyright (C) 2018 Yuusha and tilasoldo
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
-    This file is part of my contributions of OpenFOAM.
+    This file is part of tilasoldo and Yuusha contribution to OpenFOAM.
+    It is based on chriss85 contribution for OpenFOAM 2.3.x.
 
     OpenFOAM is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -54,11 +55,8 @@ License
 namespace Foam
 {
 
-/* * * * * * * * * * * * * * * * * Enthalpy-based * * * * * * * * * * * * * */
-
-
 /* * * * * * * * * * * * * * Internal-energy-based * * * * * * * * * * * * * */
-//Some simple combinations for testing purposes
+// Some simple combinations for testing purposes
 makeThermo
 (
     psiThermo,
@@ -107,9 +105,8 @@ makeThermo
     specie
 );
 
-
-//One of the last two combinations is usually used for plasmas, using tabulated data
-//This one uses two tables for h(p, T) and T(p, h)
+// Usually used for plasmas, using tabulated data
+// This one uses two tables for h(p, T) and T(p, h)
 makeThermo
 (
     psiThermo,
@@ -122,7 +119,7 @@ makeThermo
     specie
 );
 
-//This one only uses one table for h(p,T) and calculates T(p, h) manually by root finding
+// This one only uses one table for h(p,T) and calculates T(p, h) manually.
 makeThermo
 (
     psiThermo,
@@ -147,9 +144,7 @@ makeThermo
     specie
 );
 
-
-
-
+    
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

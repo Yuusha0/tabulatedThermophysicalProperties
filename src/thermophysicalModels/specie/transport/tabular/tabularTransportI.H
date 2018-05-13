@@ -2,11 +2,12 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Xavier Lamboley
+    \\  /    A nd           | Copyright (C) 2018 Yuusha and tilasoldo
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
-    This file is part of my contributions of OpenFOAM.
+    This file is part of tilasoldo and Yuusha contribution to OpenFOAM.
+    It is based on chriss85 contribution for OpenFOAM 2.3.x.
 
     OpenFOAM is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -116,7 +117,7 @@ inline Foam::scalar Foam::tabularTransport<Thermo>::kappa
 ) const
 {
     //Info << "kappa value: " << kappa_(T, p) << endl;
-    return kappa_(T, p); // this->Cpv(p, T)*mu(p, T)*rPr_;
+    return kappa_(T, p);
 }
 
 
@@ -127,7 +128,7 @@ inline Foam::scalar Foam::tabularTransport<Thermo>::alphah
     const scalar T
 ) const
 {
-    return kappa(p, T) / this->Cp(p, T); // mu(p, T)*rPr_;
+    return kappa(p, T) / this->Cp(p, T);
 }
 
 
@@ -167,27 +168,6 @@ inline void Foam::tabularTransport<Thermo>::operator+=
 	kappa_ = Y1*kappa_ + Y2*pt.kappa_;
     }
 }
-
-
-// template<class Thermo>
-// inline void Foam::tabularTransport<Thermo>::operator-=
-// (
-//     const tabularTransport<Thermo>& pt
-// )
-// {
-//     scalar Y1 = this->Y();
-
-//     Thermo::operator-=(pt);
-
-//     if (mag(this->Y()) > SMALL)
-//     {
-// 	Y1 /= this->Y();
-// 	scalar Y2 = pt.Y()/this->Y();
-
-// 	mu_ = Y1*mu_ - Y2*pt.mu_;
-// 	kappa_ = Y1*kappa_ - Y2*pt.kappa_;
-//     }
-// }
 
 
 template<class Thermo>
@@ -239,43 +219,6 @@ inline Foam::tabularTransport<Thermo> Foam::operator+
 }
 
 
-// template<class Thermo>
-// inline Foam::tabularTransport<Thermo> Foam::operator-
-// (
-//     const tabularTransport<Thermo>& pt1,
-//     const tabularTransport<Thermo>& pt2
-// )
-// {
-//     Thermo t
-//     (
-//         static_cast<const Thermo&>(pt1) - static_cast<const Thermo&>(pt2)
-//     );
-
-//     if (mag(t.Y()) < SMALL)
-//     {
-//         return tabularTransport<Thermo>
-//         (
-//             t,
-//             0,
-//             pt1.mu_,
-//             pt1.kappa_
-//         );
-//     }
-//     else
-//     {
-//         scalar Y1 = pt1.Y()/t.Y();
-//         scalar Y2 = pt2.Y()/t.Y();
-
-//         return polynomialTransport<Thermo>
-//         (
-//             t,
-//             Y1*pt1.mu_ - Y2*pt2.mu_,
-//             Y1*pt1.kappa_ - Y2*pt2.kappa_
-//         );
-//     }
-// }
-
-
 template<class Thermo>
 inline Foam::tabularTransport<Thermo> Foam::operator*
 (
@@ -290,17 +233,6 @@ inline Foam::tabularTransport<Thermo> Foam::operator*
         pt.kappa_
     );
 }
-
-
-// template<class Thermo>
-// inline Foam::tabularTransport<Thermo> Foam::operator==
-// (
-//     const tabularTransport<Thermo>& pt1,
-//     const tabularTransport<Thermo>& pt2
-// )
-// {
-//     return pt2 - pt1;
-// }
 
 
 // ************************************************************************* //

@@ -2,11 +2,12 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Xavier Lamboley
+    \\  /    A nd           | Copyright (C) 2018 Yuusha and tilasoldo
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
-    This file is part of my contributions of OpenFOAM.
+    This file is part of tilasoldo and Yuusha contribution to OpenFOAM.
+    It is based on chriss85 contribution for OpenFOAM 2.3.x.
 
     OpenFOAM is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -40,7 +41,7 @@ inline Foam::hTabularThermo<EquationOfState>::hTabularThermo
     Hf_(Hf),
     cpTable(cpTable),
     hTable(hTable)
-    
+
 {}
 
 
@@ -81,7 +82,7 @@ inline Foam::scalar Foam::hTabularThermo<EquationOfState>::limit
     const scalar T
 ) const
 {
-  return T;
+    return T;
 }
 
 
@@ -91,7 +92,7 @@ inline Foam::scalar Foam::hTabularThermo<EquationOfState>::Cp
     const scalar p, const scalar T
 ) const
 {
-//    Info << "cp for T= " << T << ", p= " << p  << ": " << cpTable(T, p) << endl;
+ // Info << "cp for T= " << T << ", p= " << p  << ": " << cpTable(T, p) << endl;
     return cpTable(T, p) + EquationOfState::Cp(p, T);
 }
 
@@ -103,7 +104,7 @@ inline Foam::scalar Foam::hTabularThermo<EquationOfState>::Ha
 ) const
 {
     return hTable(p, T) + EquationOfState::H(p, T);
-    
+
 }
 
 
@@ -137,6 +138,7 @@ inline Foam::scalar Foam::hTabularThermo<EquationOfState>::S
     );
     return T;
 }
+
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
@@ -177,6 +179,7 @@ inline void Foam::hTabularThermo<EquationOfState>::operator+=
         hTable = Y1*hTable + Y2*pt.hTable;
     }
 }
+
 
 template<class EquationOfState>
 inline void Foam::hTabularThermo<EquationOfState>::operator*=
@@ -223,6 +226,7 @@ inline Foam::hTabularThermo<EquationOfState> Foam::operator+
         );
     }
 }
+
 
 template<class EquationOfState>
 inline Foam::hTabularThermo<EquationOfState> Foam::operator*

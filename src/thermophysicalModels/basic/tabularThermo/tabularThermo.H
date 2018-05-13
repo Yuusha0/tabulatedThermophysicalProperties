@@ -2,11 +2,12 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Xavier Lamboley
+    \\  /    A nd           | Copyright (C) 2018 Yuusha and tilasoldo
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
-    This file is part of my contributions of OpenFOAM.
+    This file is part of tilasoldo and Yuusha contribution to OpenFOAM.
+    It is based on chriss85 contribution for OpenFOAM 2.3.x.
 
     OpenFOAM is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -57,18 +58,19 @@ protected:
 
     // Protected data
 
-    //- Compressibility [s^2/m^2]
-    volScalarField psi_;
+        //- Compressibility [s^2/m^2]
+       volScalarField psi_;
 
-    //- Dynamic viscosity [kg/m/s]
-    volScalarField mu_;
-	
-	interpolation2DTable<scalar> densityTable;
-	
+        //- Dynamic viscosity [kg/m/s]
+        volScalarField mu_;
+
+        //- Density [kg/m^3]
+        interpolation2DTable<scalar> densityTable;
+
     // Protected Member Functions
 
-    //- Construct as copy (not implemented)
-    tabularThermo(const tabularThermo&);
+        //- Construct as copy (not implemented)
+        tabularThermo(const tabularThermo&);
 
 
 public:
@@ -88,12 +90,12 @@ public:
 
 
     // Constructors
-    //- Construct from mesh and phase name
-    tabularThermo
-    (
-        const fvMesh&,
-        const word& phaseName
-    );
+        //- Construct from mesh and phase name
+        tabularThermo
+        (
+	    const fvMesh&,
+            const word& phaseName
+	);
 
 
     //- Selector
@@ -109,15 +111,16 @@ public:
 
 
     // Member functions
+
         volScalarField& lookupOrConstruct2
         (
             const fvMesh& mesh,
             const char* name,
-	        dimensionSet units
+	    dimensionSet units
         ) const;
-    
+
         // Fields derived from thermodynamic state variables
-    
+
             //- Add the given density correction to the density field.
             //  Used to update the density field following pressure solution.
             //  For psiThermo does nothing.
@@ -131,10 +134,10 @@ public:
 
 
         // Access to transport state variables
-    
+
             //- Dynamic viscosity of mixture [kg/m/s]
             virtual tmp<volScalarField> mu() const;
-            
+
             //- Dynamic viscosity of mixture for patch [kg/m/s]
             virtual tmp<scalarField> mu(const label patchi) const = 0;
 

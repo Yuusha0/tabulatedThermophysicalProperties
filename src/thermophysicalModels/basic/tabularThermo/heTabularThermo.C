@@ -2,11 +2,12 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Xavier Lamboley
+    \\  /    A nd           | Copyright (C) 2018 Yuusha and tilasoldo
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
-    This file is part of my contributions of OpenFOAM.
+    This file is part of tilasoldo and Yuusha contribution to OpenFOAM.
+    It is based on chriss85 contribution for OpenFOAM 2.3.x.
 
     OpenFOAM is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -42,13 +43,14 @@ void Foam::heTabularThermo<BasicTabularThermo, MixtureType>::calculate()
     {
         const typename MixtureType::thermoType& mixture_ =
 	    this->cellMixture(celli);
-	
+
 	    TCells[celli] = this->TTable
 	   (
 	       pCells[celli],
-	       hCells[celli] + pCells[celli] / mixture_.rho(pCells[celli], TCells[celli])
+	       hCells[celli] + pCells[celli]
+	      /mixture_.rho(pCells[celli], TCells[celli])
 	   );
-	
+
         psiCells[celli] = mixture_.psi(pCells[celli], TCells[celli]);
         muCells[celli] = mixture_.mu(pCells[celli], TCells[celli]);
         alphaCells[celli] = mixture_.alphah(pCells[celli], TCells[celli]);
@@ -100,7 +102,9 @@ void Foam::heTabularThermo<BasicTabularThermo, MixtureType>::calculate()
             {
                 const typename MixtureType::thermoType& mixture_ =
                     this->patchFaceMixture(patchi, facei);
-		pT[facei] = this->TTable(pp[facei], phe[facei] + pp[facei] / mixture_.rho(pp[facei], pT[facei]));
+		pT[facei] =
+		    this->TTable(pp[facei], phe[facei] + pp[facei]
+			       /mixture_.rho(pp[facei], pT[facei]));
 
                 ppsi[facei] = mixture_.psi(pp[facei], pT[facei]);
                 pmu[facei] = mixture_.mu(pp[facei], pT[facei]);
@@ -146,7 +150,9 @@ void Foam::heTabularThermo<BasicTabularThermo, MixtureType>::correct()
 {
     if (debug)
     {
-        Info<< "entering heTabularThermo<BasicTabularThermo, MixtureType>::correct()"
+        Info
+	    << "entering heTabularThermo<BasicTabularThermo, "
+            << "MixtureType>::correct()"
             << endl;
     }
 
@@ -157,7 +163,9 @@ void Foam::heTabularThermo<BasicTabularThermo, MixtureType>::correct()
 
     if (debug)
     {
-        Info<< "exiting heTabularThermo<BasicTabularThermo, MixtureType>::correct()"
+        Info
+	    << "exiting "
+	    << "heTabularThermo<BasicTabularThermo, MixtureType>::correct()"
             << endl;
     }
 }

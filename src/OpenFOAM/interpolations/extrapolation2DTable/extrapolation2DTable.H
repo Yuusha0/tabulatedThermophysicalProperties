@@ -2,11 +2,12 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Xavier Lamboley
+    \\  /    A nd           | Copyright (C) 2018 Yuusha and tilasoldo
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
-    This file is part of my contributions of OpenFOAM.
+    This file is part of tilasoldo and Yuusha contribution to OpenFOAM.
+    It is based on chriss85 contribution for OpenFOAM 2.3.x.
 
     OpenFOAM is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -57,12 +58,14 @@ inline extrapolation2DTable<Type> operator+
     const extrapolation2DTable<Type>&
 );
 
+
 template<class Type>
 inline extrapolation2DTable<Type> operator-
 (
     const extrapolation2DTable<Type>&,
     const extrapolation2DTable<Type>&
-);    
+);
+
 
 template<class Type>
 inline extrapolation2DTable<Type> operator*
@@ -71,14 +74,14 @@ inline extrapolation2DTable<Type> operator*
     const extrapolation2DTable<Type>&
 );
 
+
 /*---------------------------------------------------------------------------*\
                     Class extrapolation2DTable Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class extrapolation2DTable
-    :
-    public List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >
+class extrapolation2DTable:
+	public List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >
 {
 public:
 
@@ -92,7 +95,7 @@ public:
             EXTRAPOLATE           /*!< Extrapolate value to the start/end value */
         };
 
-        //- Cconvenience typedef
+        //- Convenience typedef
         typedef List<Tuple2<scalar, List<Tuple2<scalar, Type> > > > table;
 
 

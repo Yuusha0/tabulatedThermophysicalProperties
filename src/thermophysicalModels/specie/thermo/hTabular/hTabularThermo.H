@@ -2,11 +2,12 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Xavier Lamboley
+    \\  /    A nd           | Copyright (C) 2018 Yuusha and tilasoldo
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
-    This file is part of my contributions of OpenFOAM.
+    This file is part of tilasoldo and Yuusha contribution to OpenFOAM.
+    It is based on chriss85 contribution for OpenFOAM 2.3.x.
 
     OpenFOAM is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -26,9 +27,15 @@ Class
 
 Description
     Thermodynamics package templated on the equation of state, using tabular
-    functions for cp, h and s
+    functions for \c cp and \c h.
 
-    h and s derived from cp
+    \c h derived from \c cp
+
+Note
+    - Heat of formation is inputted in [J/kg], but internally uses [J/kmol]
+    - Standard entropy is inputted in [J/kg/K], but internally uses [J/kmol/K]
+    - Specific heat at constant pressure polynomial coefficients evaluate to an
+      expression in [J/(kg.K)].
 
 SourceFiles
     hTabularThermoI.H
@@ -98,7 +105,7 @@ class hTabularThermo
 
         //- Standard entropy
         scalar Sf_;
-    
+
         //- Specific heat at constant pressure table
         extrapolation2DTable<scalar> cpTable;
 
@@ -160,7 +167,7 @@ public:
 
             //- Chemical enthalpy [J/kmol]
             inline scalar Hc() const;
-	    
+
             //- Entropy [J/(kmol K)]
             // Not implemented
             inline scalar S(const scalar p, const scalar T) const;

@@ -2,11 +2,12 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Xavier Lamboley
+    \\  /    A nd           | Copyright (C) 2018 Yuusha and tilasoldo
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
-    This file is part of my contributions of OpenFOAM.
+    This file is part of tilasoldo and Yuusha contribution to OpenFOAM.
+    It is based on chriss85 contribution for OpenFOAM 2.3.x.
 
     OpenFOAM is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -68,7 +69,7 @@ Foam::tabularThermo::tabularThermo(const fvMesh& mesh, const word& phaseName)
         dimensionSet(1, -1, -1, 0, 0)
     ),
     densityTable("constant/densityTable")
-{	
+{
     densityTable.outOfBounds(interpolation2DTable<scalar>::CLAMP);
 }
 
@@ -92,7 +93,6 @@ Foam::tabularThermo::~tabularThermo()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
 
 Foam::volScalarField& Foam::tabularThermo::lookupOrConstruct2
 (
@@ -132,10 +132,29 @@ Foam::volScalarField& Foam::tabularThermo::lookupOrConstruct2
 
 Foam::tmp<Foam::volScalarField> Foam::tabularThermo::rho() const
 {
-    volScalarField rho_ = lookupOrConstruct2(T_.mesh(), phasePropertyName("thermo:rho_").c_str(), dimensionSet(1, -1, -2, 0, 0));
-    volScalarField T_back = lookupOrConstruct2(T_.mesh(), phasePropertyName("thermo:T_back").c_str(), dimensionSet(0, 0, 0, 1, 0));
-    volScalarField p_back = lookupOrConstruct2(T_.mesh(), phasePropertyName("thermo:p_back").c_str(), dimensionSet(1, -3, 0, 0, 0));
-    //Check if the temperature or pressure fields have changed since the last iteration. If they have, 
+    volScalarField rho_ =
+	lookupOrConstruct2
+	(
+	    T_.mesh(),
+	    phasePropertyName("thermo:rho_").c_str(),
+	    dimensionSet(1, -1, -2, 0, 0)
+	 );
+    volScalarField T_back =
+	lookupOrConstruct2
+	(
+	    T_.mesh(),
+	    phasePropertyName("thermo:T_back").c_str(),
+	    dimensionSet(0, 0, 0, 1, 0)
+	 );
+    volScalarField p_back =
+	lookupOrConstruct2
+	(
+	    T_.mesh(),
+	    phasePropertyName("thermo:p_back").c_str(),
+	    dimensionSet(1, -3, 0, 0, 0)
+	 );
+    /* Check if the temperature or pressure fields
+       have changed since the last iteration. */
     forAll(T_, faceI)
     {
 	if(T_[faceI] != T_back[faceI] || p_[faceI] != p_back[faceI])
@@ -153,13 +172,14 @@ Foam::tmp<Foam::volScalarField> Foam::tabularThermo::rho() const
     return rho_;
 }
 
+
 void Foam::tabularThermo::correctRho(const Foam::volScalarField& deltaRho)
 {}
 
 
 const Foam::volScalarField& Foam::tabularThermo::psi() const
 {
-    return rho() / (p_ + dimensionedScalar("tmpstabs", p_.dimensions(), SMALL));
+    return rho()/(p_ + dimensionedScalar("tmpstabs", p_.dimensions(), SMALL));
 }
 
 
