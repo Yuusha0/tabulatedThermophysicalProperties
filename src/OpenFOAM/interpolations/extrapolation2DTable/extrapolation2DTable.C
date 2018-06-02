@@ -359,7 +359,7 @@ Type Foam::extrapolation2DTable<Type>::Tderivative
     {
 	return (row1.first().second() - row0.first().second())
 	      /(t[x1i].first() - t[x0i].first());
-
+    }
     // find low and high indices in the Y range that bound valueY
     label y00 = Xi(row0, valueY, false);
     label y01 = Xi(row0, valueY, true);
