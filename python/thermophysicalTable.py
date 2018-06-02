@@ -33,7 +33,6 @@ class thermophysicalTable() :
 
     def __init__(self) :
         self.table = []
-        self.fileName = ''
 
     def read(self, fileName='') :
         """ Read a tabulated thermophysical file and store it into table"""
@@ -42,7 +41,6 @@ class thermophysicalTable() :
             for line in f :
                 tmpList = sub('\(+|\)+', ' ', line).strip().split()
                 try :
-                    count = len(tmpList) - 1
                     tupleList=[]
                     for i in range(1,len(tmpList)-1,2):
                         tupleList.append((tmpList[i], tmpList[i+1]))
@@ -50,7 +48,7 @@ class thermophysicalTable() :
                 except IndexError :
                     continue
 
-    def write(self, fileName='') :
+    def write(self, fileName='', precision=6) :
         """ Write a thermopysical file """
 
         with open(fileName, 'w') as f :
@@ -58,13 +56,24 @@ class thermophysicalTable() :
             for element in self.table :
                 stringOut=""
                 for elem in element[1][:] :
-                    stringOut += '({} {}) '.format(elem[0], elem[1])
-                f.write('( {} ({}))\n'.format(element[0], stringOut))
+                    stringOut += '({:<.{precision}e} {:<.{precision}e}) '.format(float(elem[0]), float(elem[1]), precision=precision)
+                f.write('( {:<.{precision}e} ({}))\n'.format(float(element[0]), stringOut, precision=precision))
             f.write(')')
 
-    def importation(self, fileName='', ext = '') :
+    def importation(self, fileName, fixValue, sep=',', columns=(0,1)) :
         """ Import thermophysical data from a file.
-        Only CSV is implemented yet """
+        Only CSV or equivalent is implemented yet """
+
+        with open(fileName, 'r') as f :
+            for line in f :
+                # Special command when separator is space
+                if sep is ' ' :
+                    tmpList = line.strip().split()
+                else :
+                    tmpList = line.strip().split(sep)
+
+                tup=[(fixValue, tmpList[columns[1]])]
+                self.table.append([tmpList[columns[0]], tup])
 
     def transpose(self) :
         """ Invert lines and columns in a tabulated thermophysical list """
@@ -84,6 +93,7 @@ class thermophysicalTable() :
 
 
 thermo = thermophysicalTable()
-thermo.read('hTable_orig')
-thermo.transpose()
-thermo.write('hTable_transposed')
+#thermo.read('hTable_orig')
+thermo.importation(fileName='test.txt',sep=' ', columns=(0,3), fixValue=1.e5)
+#thermo.transpose()
+thermo.write('cpTable')
