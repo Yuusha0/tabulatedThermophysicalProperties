@@ -39,8 +39,7 @@ Tabulated thermophysical properties for OpenFOAM 5.x.
 
 * In your constant/thermophysicalProperties file:
   * Change transport, thermo, and equationOfState to the desired values.
-  * Use hePsiThermo or heRhoThermo for type value.
-    heTabularThermo currently doesn't work.
+  * Use hePsiThermo, heRhoThermo or heTabularThermo for type value.
   * Create subdictionaries for each property using tabulated data.
     * Add fileName value.
     * Add outOfBounds value:
@@ -55,7 +54,6 @@ Tabulated thermophysical properties for OpenFOAM 5.x.
 
 ## MISCELLANEOUS
 
-* heTabularThermo currently doesn't work.
 * Multi-species works but it is very slow for large tables due to OpenFOAM code design.
 * Only 1 non reactive model of multi-species is currently implemented.
 
