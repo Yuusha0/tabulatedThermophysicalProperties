@@ -97,10 +97,23 @@ class hTabularThermo
 :
     public EquationOfState
 {
+public:
+
+
     // Private data
 
-        //- Heat of formation
-        //  Note: input in [J/kg], but internally uses [J/kmol]
+        //- Heat of formation mode
+        word mode_;
+
+        //- Heat of formation integer mode
+        // NOTE : needed because I do not succeed
+        // with NamedEnum and templated class
+        int modeInt_;
+
+        //- Tabulated heat of formation
+        extrapolation2DTable<scalar> hfTable;
+
+        //- Constant heat of formation
         scalar Hf_;
 
         //- Standard entropy
@@ -119,9 +132,10 @@ class hTabularThermo
         inline hTabularThermo
         (
             const EquationOfState& pt,
-            const scalar Hf,
+            const extrapolation2DTable<scalar> hfTable,
 	    const extrapolation2DTable<scalar> cpTable,
-	    const extrapolation2DTable<scalar> hTable
+	    const extrapolation2DTable<scalar> hTable,
+            const scalar Hf
         );
 
 

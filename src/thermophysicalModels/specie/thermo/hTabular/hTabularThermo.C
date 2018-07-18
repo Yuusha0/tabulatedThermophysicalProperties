@@ -27,6 +27,7 @@ License
 #include "hTabularThermo.H"
 #include "IOstreams.H"
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
@@ -36,13 +37,18 @@ Foam::hTabularThermo<EquationOfState>::hTabularThermo
 )
 :
     EquationOfState(is),
-    Hf_(readScalar(is))
+    mode_("tabulated"),
+    modeInt_(0),
+    Hf_(0),
+    Sf_(0)
 {
-    Hf_ *= this->W();
+
     cpTable = extrapolation2DTable<scalar>("constant/cpTable");
     hTable = extrapolation2DTable<scalar>("constant/hTable");
+    hfTable = extrapolation2DTable<scalar>("constant/hfTable");
     cpTable.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
     hTable.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
+    hfTable.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
 }
 
 
@@ -53,10 +59,59 @@ Foam::hTabularThermo<EquationOfState>::hTabularThermo
 )
 :
     EquationOfState(dict),
-    Hf_(readScalar(dict.subDict("thermodynamics").lookup("Hf"))),
+    mode_(dict.subDict("thermodynamics").subDict("hf").lookup("mode")),
     cpTable(dict.subDict("thermodynamics").subDict("Cp")),
     hTable(dict.subDict("thermodynamics").subDict("h"))
-{}
+{
+
+    if (mode_ == "tabulated")
+    {
+	modeInt_ = 0;
+    }
+    else if (mode_ == "constant")
+    {
+	modeInt_ = 1;
+    }
+    else
+    {
+	FatalErrorInFunction
+	    << "Enthalpy of formation mode is: \n"
+	    << " - constant\n"
+	    << " - tabualted\n"
+	    << abort(FatalError);
+    }
+
+    switch(modeInt_)
+    {
+        case 1:
+	{
+	    // Create constant enthalpy of formation
+	    Hf_ = readScalar
+		(
+		    dict.subDict("thermodynamics").subDict("hf").lookup("Hf")
+		);
+
+            // Create empty table for enthalpy of formation
+	    hfTable = extrapolation2DTable<scalar>();
+
+	    break;
+	}
+
+       case 0:
+       {
+	   hfTable =
+	       extrapolation2DTable<scalar>
+	       (
+		   dict.subDict("thermodynamics").subDict("hf")
+	       );
+
+	   Hf_ = 0;
+
+	   break;
+       }
+    }
+
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -70,7 +125,6 @@ void Foam::hTabularThermo<EquationOfState>::write
     EquationOfState::write(os);
 
     dictionary dict("thermodynamics");
-    dict.add("Hf", Hf_);
     os  << indent << dict.dictName() << dict;
 }
 
@@ -84,8 +138,7 @@ Foam::Ostream& Foam::operator<<
     const hTabularThermo<EquationOfState>& pt
 )
 {
-    os  << static_cast<const EquationOfState&>(pt) << tab
-        << pt.Hf_ << tab;
+    os  << static_cast<const EquationOfState&>(pt) << tab;
 
     os.check
     (

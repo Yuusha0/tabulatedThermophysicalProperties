@@ -32,15 +32,17 @@ template<class EquationOfState>
 inline Foam::hTabularThermo<EquationOfState>::hTabularThermo
 (
     const EquationOfState& pt,
-    const scalar Hf,
+    const extrapolation2DTable<scalar> hfTable,
     const extrapolation2DTable<scalar> cpTable,
-    const extrapolation2DTable<scalar> hTable
+    const extrapolation2DTable<scalar> hTable,
+    const scalar Hf
 )
 :
     EquationOfState(pt),
-    Hf_(Hf),
+    hfTable(hfTable),
     cpTable(cpTable),
-    hTable(hTable)
+    hTable(hTable),
+    Hf_(Hf)
 
 {}
 
@@ -54,9 +56,10 @@ inline Foam::hTabularThermo<EquationOfState>::hTabularThermo
 )
 :
     EquationOfState(pt),
-    Hf_(pt.Hf_),
+    hfTable(pt.hfTable),
     cpTable(pt.cpTable),
-    hTable(pt.hTable)
+    hTable(pt.hTable),
+    Hf_(pt.Hf_)
 {}
 
 
@@ -68,9 +71,10 @@ inline Foam::hTabularThermo<EquationOfState>::hTabularThermo
 )
 :
     EquationOfState(name, pt),
-    Hf_(pt.Hf_),
+    hfTable(pt.hfTable),
     cpTable(pt.cpTable),
-    hTable(pt.hTable)
+    hTable(pt.hTable),
+    Hf_(pt.Hf_)
 {}
 
 
@@ -114,7 +118,21 @@ inline Foam::scalar Foam::hTabularThermo<EquationOfState>::Hs
     const scalar p, const scalar T
 ) const
 {
-    return Ha(p, T) - Hc();
+    // Switch according constant or tabulated heat of formation
+    switch(modeInt_)
+    {
+        case 1:
+	{
+	    return Ha(p, T) - Hc();
+	}
+
+        case 0:
+	{
+	    return Ha(p, T) - hfTable(p, T);
+	}
+    }
+
+    return 0;
 }
 
 
@@ -122,7 +140,22 @@ template<class EquationOfState>
 inline Foam::scalar Foam::hTabularThermo<EquationOfState>::Hc()
 const
 {
-    return Hf_;
+    // Switch according constant or tabulated heat of formation
+    switch(modeInt_)
+    {
+        case 1:
+	{
+	    return Hf_;
+	}
+
+	// Do not use Hc when using tabulated heat of formation
+        case 0:
+	{
+	    return 0;
+	}
+    }
+
+    return 0;
 }
 
 template<class EquationOfState>
@@ -151,9 +184,10 @@ Foam::hTabularThermo<EquationOfState>::operator=
 {
     EquationOfState::operator=(pt);
 
-    Hf_ = pt.Hf_;
+    hfTable = pt.hfTable;
     cpTable = pt.cpTable;
     hTable = pt.hTable;
+    Hf_ = pt.Hf_;
 
     return *this;
 }
@@ -174,9 +208,10 @@ inline void Foam::hTabularThermo<EquationOfState>::operator+=
         Y1 /= this->Y();
         const scalar Y2 = pt.Y()/this->Y();
 
-        Hf_ = Y1*Hf_ + Y2*pt.Hf_;
+        hfTable = Y1*hfTable + Y2*pt.hfTable;
         cpTable = Y1*cpTable + Y2*pt.cpTable;
         hTable = Y1*hTable + Y2*pt.hTable;
+	Hf_ = Y1*Hf_ + Y2*pt.Hf_;
     }
 }
 
@@ -208,9 +243,10 @@ inline Foam::hTabularThermo<EquationOfState> Foam::operator+
         return hTabularThermo<EquationOfState>
         (
             eofs,
-            pt1.Hf_,
+            pt1.hfTable,
             pt1.cpTable,
-            pt1.hTable
+            pt1.hTable,
+	    pt1.Hf_
         );
     }
     {
@@ -220,9 +256,10 @@ inline Foam::hTabularThermo<EquationOfState> Foam::operator+
         return hTabularThermo<EquationOfState>
         (
             eofs,
-            Y1*pt1.Hf_ + Y2*pt2.Hf_,
+            Y1*pt1.hfTable + Y2*pt2.hfTable,
             Y1*pt1.cpTable + Y2*pt2.cpTable,
-            Y1*pt1.hTable + Y2*pt2.hTable
+            Y1*pt1.hTable + Y2*pt2.hTable,
+	    Y1*pt1.Hf_ + Y2*pt2.Hf_
         );
     }
 }
@@ -238,9 +275,10 @@ inline Foam::hTabularThermo<EquationOfState> Foam::operator*
     return hTabularThermo<EquationOfState>
     (
         s*static_cast<const EquationOfState&>(pt),
-        pt.Hf_,
+        pt.hfTable,
 	pt.cpTable,
-	pt.hTable
+	pt.hTable,
+	pt.Hf_
     );
 }
 
@@ -264,9 +302,10 @@ inline Foam::hTabularThermo<EquationOfState> Foam::operator==
     return hTabularThermo<EquationOfState>
     (
         eofs,
-        Y2*pt2.Hf_     - Y1*pt1.Hf_,
+        Y2*pt2.hfTable - Y1*pt1.hfTable,
         Y2*pt2.cpTable - Y1*pt1.cpTable,
-        Y2*pt2.hTable  - Y1*pt1.hTable
+        Y2*pt2.hTable  - Y1*pt1.hTable,
+	Y2*pt2.Hf_ - Y1*pt1.Hf_
     );
 }
 
