@@ -60,6 +60,7 @@ Foam::extrapolation2DTable<Type>::extrapolation2DTable()
 :
     List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(),
     boundsHandling_(extrapolation2DTable::WARN),
+    searchMethod_(extrapolation2DTable::simple),
     fileName_("fileNameIsUndefined"),
     reader_(NULL),
     isNull_(true)
@@ -71,12 +72,14 @@ Foam::extrapolation2DTable<Type>::extrapolation2DTable
 (
     const List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >& values,
     const boundsHandling bounds,
+    const searchMethod method,
     const fileName& fName,
     const Switch isNull
 )
 :
     List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(values),
     boundsHandling_(bounds),
+    searchMethod_(method),
     fileName_(fName),
     reader_(NULL),
     isNull_(isNull)
@@ -88,6 +91,7 @@ Foam::extrapolation2DTable<Type>::extrapolation2DTable(const fileName& fName)
 :
     List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(),
     boundsHandling_(extrapolation2DTable::WARN),
+    searchMethod_(extrapolation2DTable::simple),
     fileName_(fName),
     reader_(new openFoamTableReader<Type>(dictionary())),
     isNull_(false)
@@ -101,6 +105,7 @@ Foam::extrapolation2DTable<Type>::extrapolation2DTable(const dictionary& dict)
 :
     List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(),
     boundsHandling_(wordToBoundsHandling(dict.lookup("outOfBounds"))),
+    searchMethod_(wordToSearchMethod(dict.lookup("searchMethod"))),
     fileName_(dict.lookup("fileName")),
     reader_(tableReader<Type>::New(dict)),
     isNull_(false)
@@ -117,6 +122,7 @@ Foam::extrapolation2DTable<Type>::extrapolation2DTable
 :
     List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(extrapTable),
     boundsHandling_(extrapTable.boundsHandling_),
+    searchMethod_(extrapTable.searchMethod_),
     fileName_(extrapTable.fileName_),
     reader_(extrapTable.reader_),    // note: steals reader. Used in write().
     isNull_(extrapTable.isNull_)
@@ -240,31 +246,51 @@ Type Foam::extrapolation2DTable<Type>::extrapolateValue
     label lo = 0;
     label hi = 0;
 
-    for (label i = 0; i < n; ++i)
+    switch(searchMethod_)
     {
-        if (lookupValue >= data[i].first())
-        {
-            lo = hi = i;
-        }
-        else
-        {
-            hi = i;
-            break;
-        }
-    }
+        case extrapolation2DTable::simple:
+	{
+	    for (label i = 0; i < n; ++i)
+	    {
+		if (lookupValue >= data[i].first())
+		{
+		    lo = hi = i;
+		}
+		else
+		{
+		    hi = i;
+		    break;
+		}
+	    }
 
-    if (lo == hi)
-    {
-        return data[lo].second();
-    }
-    else
-    {
-        Type m =
-            (data[hi].second() - data[lo].second())
-	   /(data[hi].first() - data[lo].first());
+	    if (lo == hi)
+	    {
+		return data[lo].second();
+	    }
+	    else
+	    {
+		Type m =
+		    (data[hi].second() - data[lo].second())
+		    /(data[hi].first() - data[lo].first());
 
-        // normal interpolation
-        return data[lo].second() + m*(lookupValue - data[lo].first());
+		// normal interpolation
+		return data[lo].second() + m*(lookupValue - data[lo].first());
+	    }
+	}
+
+       case extrapolation2DTable::uniform:
+       {
+	   // For equidistant tables get range in table
+	   double psi =
+	       (lookupValue-data.first().first())
+	      /(data.last().first() - data.first().first());
+
+	   // Bound psi
+	   psi =std::max(std::min(psi,1.0),0.0);
+
+	   lo = std::floor(psi*(n-1));
+	   hi = std::ceil(psi*(n-1));
+       }
     }
 }
 
@@ -279,43 +305,96 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
 ) const
 {
 
-    label nX = t.size();
+    label limitI = 0;
+
     if (reverse)
     {
-	for (int i = nX - 1; i > 0; --i)
-	{
-	    if (t[i].first() <= valueX)
-	    {
-		if(i == nX - 1) //point lies outwards, return last index
-		{
-		    return nX - 1;
-		}
-                else
-		{
-		    return i + 1;
-		}
-	    }
-	}
-	return 1; //point lies outwards, return 2nd index
+        limitI = t.size() - 1;
     }
-    else
+    if (
+        ((valueX>t[limitI].first()) && reverse)
+        || ((valueX<t[limitI].first()) && !reverse)
+       )
     {
-	for (int i = 0; i < nX - 1; ++i)
+        switch (boundsHandling_)
+        {
+	    case extrapolation2DTable::ERROR:
+            {
+                FatalErrorIn
+                (
+                    "Foam::extrapolation2DTable<Type>::extrapolateValue"
+                    "("
+                        "List<Tuple2<scalar, Type> >&, "
+                        "const scalar"
+                    ")"
+                )
+		    << "value (" << valueX << ") outside table " << nl
+                    << exit(FatalError);
+                break;
+            }
+            case extrapolation2DTable::WARN:
+            {
+                WarningIn
+                (
+                    "Foam::extrapolation2DTable<Type>::extrapolateValue"
+                    "("
+                        "List<Tuple2<scalar, Type> >&, "
+                        "const scalar"
+                    ")"
+                )
+		    << "value (" << valueX << ") outside table " << nl
+                    << "    Continuing with the last entry"
+                    << endl;
+            }
+        }
+    }
+
+    label i = 0;
+    switch(searchMethod_)
+    {
+        case extrapolation2DTable::uniform:
 	{
-	    if (t[i].first() > valueX)
+	    // For equidistant tables get range in table
+	    label nX = t.size();
+	    double psi =
+		(valueX - t.first().first())
+	       /(t.last().first() - t.first().first());
+	    // Bound psi
+	    psi =std::max(std::min(psi,1.0),0.0);
+
+	    // Get high value
+	    if (reverse)
 	    {
-		if (i == 0)
+		i =  std::ceil(psi*(nX-1));
+	    }
+	    else
+	    {
+		// Get low value
+		i = std::floor(psi*(nX-1));
+	    }
+	}
+        case extrapolation2DTable::simple:
+	{
+	    if (reverse)
+	    {
+		label nX = t.size();
+		i = 0;
+		while ((i < nX) && (valueX > t[i].first()))
 		{
-		    return 0; //point lies outwards, return first index
+		    i++;
 		}
-		else
+	    }
+	    else
+	    {
+		i = t.size() - 1;
+		while ((i > 0) && (valueX < t[i].first()))
 		{
-		    return i - 1;
+		    i--;
 		}
 	    }
 	}
-	return nX - 2; //point lies outwards, return second last index
     }
+    return i;
 }
 
 
@@ -439,9 +518,9 @@ Type Foam::extrapolation2DTable<Type>::operator()
 	scalar factor =
 	    (valueX - t[x0i].first())/(t[x1i].first() - t[x0i].first());
 	if (nY == 1)
-        {
+	{
 	    return row0.first().second() + factor
-		  *(row1.first().second() - row0.first().second());
+		*(row1.first().second() - row0.first().second());
 	}
 	//Now we have the data for the first axis.
 
@@ -457,18 +536,22 @@ Type Foam::extrapolation2DTable<Type>::operator()
 	for (label i = ymin; i <= ymax; i++)
 	{
 	    points.append(vector(
-				 valueX,
-				 row0[i].first()  + factor*(row1[i].first()  - row0[i].first() ),
-				 row0[i].second() + factor*(row1[i].second() - row0[i].second())
-				 ));
+			      valueX,
+			      row0[i].first()
+			    + factor*(row1[i].first()
+			    - row0[i].first() ),
+			      row0[i].second()
+			    + factor*(row1[i].second()
+			    - row0[i].second())
+			      ));
 	    if (points[i - ymin].y() < valueY)
 	    {
 		index = i - ymin;
 	    }
 	}
 	return (points[index] + (valueY - points[index].y())
-	      /(points[index + 1].y() - points[index].y())
-	      *(points[index + 1] - points[index])).z();
+		/(points[index + 1].y() - points[index].y())
+		*(points[index + 1] - points[index])).z();
     }
 }
 
@@ -538,6 +621,72 @@ Foam::extrapolation2DTable<Type>::wordToBoundsHandling
     }
 }
 
+template<class Type>
+Foam::word Foam::extrapolation2DTable<Type>::searchMethodToWord
+(
+     const searchMethod& searchMethod
+) const
+{
+    word enumName("simple");
+
+    switch (searchMethod_)
+    {
+        case extrapolation2DTable::simple:
+        {
+            enumName = "simple";
+            break;
+        }
+        case extrapolation2DTable::uniform:
+        {
+            enumName = "uniform";
+            break;
+        }
+        case extrapolation2DTable::newton:
+        {
+            enumName = "newton";
+            break;
+        }
+    }
+
+    return enumName;
+}
+
+
+template<class Type>
+typename Foam::extrapolation2DTable<Type>::searchMethod
+Foam::extrapolation2DTable<Type>::wordToSearchMethod
+(
+    const word& searchMethod
+) const
+{
+    if (searchMethod == "simple")
+    {
+        return extrapolation2DTable::simple;
+    }
+    else if (searchMethod == "uniform")
+    {
+        return extrapolation2DTable::uniform;
+    }
+    else if (searchMethod == "newton")
+    {
+        return extrapolation2DTable::newton;
+    }
+    else
+    {
+        WarningIn
+        (
+            "Foam::extrapolation2DTable<Type>::wordToSearchMethod"
+            "("
+            "    const word&"
+            ")"
+        )
+	    << "bad searchMethod specifier "
+	    << searchMethod << " using 'simple'" << endl;
+
+        return extrapolation2DTable::simple;
+    }
+}
+
 
 template<class Type>
 inline Foam::extrapolation2DTable<Type>&
@@ -547,6 +696,7 @@ Foam::extrapolation2DTable<Type>::operator=
 )
 {
     boundsHandling_ = et.boundsHandling_;
+    searchMethod_ = et.searchMethod_;
     fileName_ = et.fileName_;
     reader_ = et.reader_;
     isNull_ = et.isNull_;
@@ -577,6 +727,7 @@ inline Foam::extrapolation2DTable<Type> Foam::operator+
         (
             ett,
     	    et2.boundsHandling_,
+	    et2.searchMethod_,
     	    et2.fileName_,
     	    et2.isNull_
         );
@@ -587,6 +738,7 @@ inline Foam::extrapolation2DTable<Type> Foam::operator+
         (
             etn,
     	    et1.boundsHandling_,
+	    et1.searchMethod_,
     	    et1.fileName_,
     	    et1.isNull_
         );
@@ -604,6 +756,7 @@ inline Foam::extrapolation2DTable<Type> Foam::operator+
     (
 	etn,
 	et1.boundsHandling_,
+	et1.searchMethod_,
 	et1.fileName_,
 	false
     );
@@ -638,6 +791,7 @@ inline Foam::extrapolation2DTable<Type> Foam::operator-
     (
 	 etn,
 	 et1.boundsHandling_,
+	 et1.searchMethod_,
 	 et1.fileName_,
 	 et1.isNull_
     );
@@ -660,6 +814,7 @@ inline Foam::extrapolation2DTable<Type> Foam::operator*
         (
     	    etn,
     	    et.boundsHandling_,
+	    et.searchMethod_,
     	    et.fileName_,
 	    et.isNull_
         );
@@ -681,6 +836,7 @@ inline Foam::extrapolation2DTable<Type> Foam::operator*
     	(
     	    etn,
     	    et.boundsHandling_,
+	    et.searchMethod_,
     	    et.fileName_,
     	    true
     	);
@@ -691,6 +847,7 @@ inline Foam::extrapolation2DTable<Type> Foam::operator*
 	(
 	    etn,
 	    et.boundsHandling_,
+	    et.searchMethod_,
 	    et.fileName_,
 	    et.isNull_
 	);
@@ -745,6 +902,8 @@ void Foam::extrapolation2DTable<Type>::write(Ostream& os) const
     os.writeKeyword("fileName")
         << fileName_ << token::END_STATEMENT << nl;
     os.writeKeyword("outOfBounds")
+        << boundsHandlingToWord(boundsHandling_) << token::END_STATEMENT << nl;
+    os.writeKeyword("searchMethod")
         << boundsHandlingToWord(boundsHandling_) << token::END_STATEMENT << nl;
 
     *this >> os;
