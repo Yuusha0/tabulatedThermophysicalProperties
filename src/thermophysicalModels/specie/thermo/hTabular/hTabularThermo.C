@@ -59,7 +59,11 @@ Foam::hTabularThermo<EquationOfState>::hTabularThermo
 )
 :
     EquationOfState(dict),
-    mode_(dict.subDict("thermodynamics").subDict("hf").lookup("mode")),
+    mode_
+    (
+	dict.subDict("thermodynamics").subDict("hf").lookupOrDefault
+	("mode","constant")
+    ),
     cpTable(dict.subDict("thermodynamics").subDict("Cp")),
     hTable(dict.subDict("thermodynamics").subDict("h"))
 {
