@@ -322,10 +322,11 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
             {
                 FatalErrorIn
                 (
-                    "Foam::extrapolation2DTable<Type>::extrapolateValue"
+                    "Foam::extrapolation2DTable<Type>::Xi"
                     "("
-                        "List<Tuple2<scalar, Type> >&, "
-                        "const scalar"
+                        "List<Tuple2<scalar, L> >&, "
+                        "const scalar, "
+		        "const bool,"
                     ")"
                 )
 		    << "value (" << valueX << ") outside table " << nl
@@ -336,10 +337,11 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
             {
                 WarningIn
                 (
-                    "Foam::extrapolation2DTable<Type>::extrapolateValue"
+                    "Foam::extrapolation2DTable<Type>::Xi"
                     "("
-                        "List<Tuple2<scalar, Type> >&, "
-                        "const scalar"
+                        "List<Tuple2<scalar, L> >&, "
+                        "const scalar, "
+		        "const bool"
                     ")"
                 )
 		    << "value (" << valueX << ") outside table " << nl
@@ -350,12 +352,12 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
     }
 
     label i = 0;
+    label nX = t.size();
     switch(searchMethod_)
     {
         case extrapolation2DTable::uniform:
 	{
 	    // For equidistant tables get range in table
-	    label nX = t.size();
 	    double psi =
 		(valueX - t.first().first())
 	       /(t.last().first() - t.first().first());
@@ -372,12 +374,59 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
 		// Get low value
 		i = std::floor(psi*(nX-1));
 	    }
+	    break;
+	}
+        case extrapolation2DTable::bisect:
+	{
+	    label n = 1;
+	    i = 0;
+	    label k = 0;
+	    label j = t.size() - 1;
+	    while (n <= t.size())
+	    {
+		i = std::floor((k + j)/2);
+		if (t[i].first() == valueX || (j - k) == 1)
+		{
+		    if (i > valueX && !reverse)
+		    {
+			--i;
+		    }
+		    else if (i < valueX && reverse)
+		    {
+			++i;
+		    }
+		    break;
+		}
+		n++;
+		if (valueX - t[i].first() > 0)
+		{
+		    k = i;
+		}
+		else
+		{
+		    j = i;
+		}
+	    }
+	    if (n > t.size())
+	    {
+		FatalErrorIn
+		(
+                    "Foam::extrapolation2DTable<Type>::Xi"
+                    "("
+                        "List<Tuple2<scalar, Type> >&, "
+                        "const scalar, "
+		        "const bool"
+                    ")"
+		)
+		    << "Bisection algorithm fails " << nl
+                    << exit(FatalError);
+	    }
+	    break;
 	}
         case extrapolation2DTable::simple:
 	{
 	    if (reverse)
 	    {
-		label nX = t.size();
 		i = 0;
 		while ((i < nX) && (valueX > t[i].first()))
 		{
@@ -392,6 +441,7 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
 		    i--;
 		}
 	    }
+	    break;
 	}
     }
     return i;
@@ -641,9 +691,9 @@ Foam::word Foam::extrapolation2DTable<Type>::searchMethodToWord
             enumName = "uniform";
             break;
         }
-        case extrapolation2DTable::newton:
+        case extrapolation2DTable::bisect:
         {
-            enumName = "newton";
+            enumName = "bisect";
             break;
         }
     }
@@ -667,9 +717,9 @@ Foam::extrapolation2DTable<Type>::wordToSearchMethod
     {
         return extrapolation2DTable::uniform;
     }
-    else if (searchMethod == "newton")
+    else if (searchMethod == "bisect")
     {
-        return extrapolation2DTable::newton;
+        return extrapolation2DTable::bisect;
     }
     else
     {

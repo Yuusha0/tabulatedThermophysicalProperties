@@ -100,7 +100,7 @@ public:
 	{
 	    simple,  /*!< The whole table's covered */
 	    uniform, /*!< Using constant spacing of the table */
-	    newton   /*!< Newton search */
+	    bisect   /*!< Bisection search */
 	};
 
         //- Convenience typedef
