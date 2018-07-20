@@ -268,20 +268,7 @@ Type Foam::extrapolation2DTable<Type>::extrapolateValue
 		    break;
 		}
 	    }
-
-	    if (lo == hi)
-	    {
-		return data[lo].second();
-	    }
-	    else
-	    {
-		Type m =
-		    (data[hi].second() - data[lo].second())
-		    /(data[hi].first() - data[lo].first());
-
-		// normal interpolation
-		return data[lo].second() + m*(lookupValue - data[lo].first());
-	    }
+	    break;
 	}
 
        case extrapolation2DTable::uniform:
@@ -296,7 +283,75 @@ Type Foam::extrapolation2DTable<Type>::extrapolateValue
 
 	   lo = std::floor(psi*(n-1));
 	   hi = std::ceil(psi*(n-1));
+	   break;
        }
+
+       case extrapolation2DTable::bisect:
+       {
+	   label i = 0;
+	   label n = 1;
+	   i = 0;
+	   label k = 0;
+	   label j = data.size() - 1;
+	   while (n <= data.size())
+	   {
+	       i = std::floor((k + j)/2);
+	       if (data[i].first() == lookupValue || (j - k) == 1)
+	       {
+		   if (data[i].first() > lookupValue)
+		   {
+		       lo = i - 1;
+		       hi = i;
+		   }
+		   else if (data[i].first() < lookupValue)
+		   {
+		       lo = i;
+		       hi = i + 1;
+		   }
+		   else
+		   {
+		       lo = hi = i;
+		   }
+		   break;
+	       }
+	       n++;
+	       if (lookupValue - data[i].first() > 0)
+	       {
+		   k = i;
+	       }
+	       else
+	       {
+		   j = i;
+	       }
+	   }
+	   if (n > data.size())
+	   {
+	       FatalErrorIn
+	       (
+                   "Foam::extrapolation2DTable<Type>::extrapolateValue"
+                   "("
+		        "List<Tuple2<scalar, Type> >&, "
+                        "const scalar"
+                   ")"
+	       )
+	       << "Bisection algorithm fails " << nl
+	       << exit(FatalError);
+	   }
+	   break;
+       }
+    }
+
+    if (lo == hi)
+    {
+	return data[lo].second();
+    }
+    else
+    {
+	Type m =
+	    (data[hi].second() - data[lo].second())
+           /(data[hi].first() - data[lo].first());
+	// normal interpolation
+	return data[lo].second() + m*(lookupValue - data[lo].first());
     }
 }
 
@@ -354,6 +409,11 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
                     << "    Continuing with the last entry"
                     << endl;
             }
+
+	    default:
+	    {
+		break;
+	    }
         }
     }
 
@@ -393,11 +453,11 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
 		i = std::floor((k + j)/2);
 		if (t[i].first() == valueX || (j - k) == 1)
 		{
-		    if (i > valueX && !reverse)
+		    if (t[i].first() > valueX && !reverse)
 		    {
 			--i;
 		    }
-		    else if (i < valueX && reverse)
+		    else if (t[i].first() < valueX && reverse)
 		    {
 			++i;
 		    }
