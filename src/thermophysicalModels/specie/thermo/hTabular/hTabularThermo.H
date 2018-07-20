@@ -99,16 +99,21 @@ class hTabularThermo
 {
 public:
 
+    // Public data types
 
+        //- Enumeration for heat of formation modes
+        enum hfMode
+        {
+            tabulated,         /*!< Use tabulated value for Hf */
+            constant          /*!< Use a constant Hf value */
+        };
+
+
+private:
     // Private data
 
         //- Heat of formation mode
-        word mode_;
-
-        //- Heat of formation integer mode
-        // NOTE : needed because I do not succeed
-        // with NamedEnum and templated class
-        int modeInt_;
+        hfMode mode_;
 
         //- Tabulated heat of formation
         extrapolation2DTable<scalar> hfTable;
@@ -167,6 +172,11 @@ public:
         //- Limit the temperature to be in the range Tlow_ to Thigh_
         inline scalar limit(const scalar) const;
 
+        //- Return the enthalpy of formation mode as a word
+        word hfModeToWord(const hfMode& mode) const;
+
+        //- Return the enthalpy of formation mode as an enumeration
+        hfMode wordToHfMode(const word& mode) const;
 
         // Fundamental properties
 

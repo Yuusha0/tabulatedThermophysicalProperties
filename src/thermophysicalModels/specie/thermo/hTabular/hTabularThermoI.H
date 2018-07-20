@@ -89,6 +89,61 @@ inline Foam::scalar Foam::hTabularThermo<EquationOfState>::limit
     return T;
 }
 
+template<class EquationOfState>
+Foam::word Foam::hTabularThermo<EquationOfState>::hfModeToWord
+(
+     const hfMode& mode
+) const
+{
+    word enumName("constant");
+
+    switch (mode)
+    {
+        case hTabularThermo::constant:
+        {
+            enumName = "constant";
+            break;
+        }
+       case hTabularThermo::tabulated:
+        {
+            enumName = "tabulated";
+            break;
+        }
+    }
+
+    return enumName;
+}
+
+
+template<class EquationOfState>
+typename Foam::hTabularThermo<EquationOfState>::hfMode
+Foam::hTabularThermo<EquationOfState>::wordToHfMode
+(
+    const word& mode
+) const
+{
+    if (mode == "constant")
+    {
+        return hTabularThermo::constant;
+    }
+    else if (mode == "tabulated")
+    {
+        return hTabularThermo::tabulated;
+    }
+    else
+    {
+        WarningIn
+        (
+            "Foam::hTabularTHermo<EquationOfState>::wordToHfMode"
+            "("
+            "    const word&"
+            ")"
+        )
+	    << "bad mode specifier " << mode << " using 'constant'" << endl;
+
+        return hTabularThermo::constant;
+    }
+}
 
 template<class EquationOfState>
 inline Foam::scalar Foam::hTabularThermo<EquationOfState>::Cp
@@ -119,14 +174,14 @@ inline Foam::scalar Foam::hTabularThermo<EquationOfState>::Hs
 ) const
 {
     // Switch according constant or tabulated heat of formation
-    switch(modeInt_)
+    switch(mode_)
     {
-        case 1:
+    case hTabularThermo::constant:
 	{
 	    return Ha(p, T) - Hc();
 	}
 
-        case 0:
+    case hTabularThermo::tabulated:
 	{
 	    return Ha(p, T) - hfTable(p, T);
 	}
@@ -141,15 +196,15 @@ inline Foam::scalar Foam::hTabularThermo<EquationOfState>::Hc()
 const
 {
     // Switch according constant or tabulated heat of formation
-    switch(modeInt_)
+    switch(mode_)
     {
-        case 1:
+    case hTabularThermo::constant:
 	{
 	    return Hf_;
 	}
 
 	// Do not use Hc when using tabulated heat of formation
-        case 0:
+    case hTabularThermo::tabulated:
 	{
 	    return 0;
 	}

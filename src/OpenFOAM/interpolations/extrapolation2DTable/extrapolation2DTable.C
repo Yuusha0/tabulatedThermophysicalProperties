@@ -107,7 +107,10 @@ Foam::extrapolation2DTable<Type>::extrapolation2DTable(const dictionary& dict)
     boundsHandling_(wordToBoundsHandling(dict.lookup("outOfBounds"))),
     searchMethod_
     (
-	wordToSearchMethod(dict.lookupOrDefault("searchMethod","simple"))
+	wordToSearchMethod
+	(
+	    dict.lookupOrDefault<word>("searchMethod","simple")
+	)
     ),
     fileName_(dict.lookup("fileName")),
     reader_(tableReader<Type>::New(dict)),

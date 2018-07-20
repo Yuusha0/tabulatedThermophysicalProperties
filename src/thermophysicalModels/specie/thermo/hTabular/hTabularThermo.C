@@ -37,8 +37,7 @@ Foam::hTabularThermo<EquationOfState>::hTabularThermo
 )
 :
     EquationOfState(is),
-    mode_("tabulated"),
-    modeInt_(0),
+    mode_(hTabularThermo::tabulated),
     Hf_(0),
     Sf_(0)
 {
@@ -61,33 +60,21 @@ Foam::hTabularThermo<EquationOfState>::hTabularThermo
     EquationOfState(dict),
     mode_
     (
-	dict.subDict("thermodynamics").subDict("hf").lookupOrDefault
-	("mode","constant")
+	wordToHfMode
+	(
+	    dict.subDict("thermodynamics").subDict("hf").lookupOrDefault<word>
+	    (
+		"mode","constant"
+	    )
+	)
     ),
     cpTable(dict.subDict("thermodynamics").subDict("Cp")),
     hTable(dict.subDict("thermodynamics").subDict("h"))
 {
 
-    if (mode_ == "tabulated")
+    switch(mode_)
     {
-	modeInt_ = 0;
-    }
-    else if (mode_ == "constant")
-    {
-	modeInt_ = 1;
-    }
-    else
-    {
-	FatalErrorInFunction
-	    << "Enthalpy of formation mode is: \n"
-	    << " - constant\n"
-	    << " - tabualted\n"
-	    << abort(FatalError);
-    }
-
-    switch(modeInt_)
-    {
-        case 1:
+    case hTabularThermo::constant:
 	{
 	    // Create constant enthalpy of formation
 	    Hf_ = readScalar
@@ -101,7 +88,7 @@ Foam::hTabularThermo<EquationOfState>::hTabularThermo
 	    break;
 	}
 
-       case 0:
+    case hTabularThermo::tabulated:
        {
 	   hfTable =
 	       extrapolation2DTable<scalar>
