@@ -1,3 +1,11 @@
 2018-05-13 v. 1.0
 -----------------
 First public release.
+
+2018-07-23 v. 2.0
+-----------------
+Add tabulated enthalpy of formation as an option
+Add uniform search method in the tables (thanks to Jan Gaertner)
+Add bisection search method in the tables
+Add an Allwmake script for compilation
+Add a tutorial case for tabulated properties
