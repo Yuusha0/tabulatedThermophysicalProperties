@@ -1,5 +1,4 @@
 EXE_INC = \
-    -Wimplicit-fallthrough=0 \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
