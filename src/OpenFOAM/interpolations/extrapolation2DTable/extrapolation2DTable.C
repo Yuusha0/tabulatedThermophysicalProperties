@@ -549,8 +549,14 @@ Type Foam::extrapolation2DTable<Type>::Tderivative
     // If we are on a tabulated value
     if (x0i == x1i)
     {
-	x0i--;
-	x1i++;
+	if (x0i != 0)
+	{
+	    x0i--;
+	};
+	if (x1i != t.size() - 1)
+	{
+	    x1i++;
+	}
     }
     row0 = t[x0i].second();
     row1 = t[x1i].second();
