@@ -546,6 +546,12 @@ Type Foam::extrapolation2DTable<Type>::Tderivative
     // find low and high indices in the X range that bound valueX
     label x0i = Xi(t, valueX, false);
     label x1i = Xi(t, valueX, true);
+    // If we are on a tabulated value
+    if (x0i == x1i)
+    {
+	x0i--;
+	x1i++;
+    }
     row0 = t[x0i].second();
     row1 = t[x1i].second();
     //factor for interpolating between both rows
@@ -628,6 +634,11 @@ Type Foam::extrapolation2DTable<Type>::operator()
 	// find low and high indices in the X range that bound valueX
 	label x0i = Xi(t, valueX, false);
 	label x1i = Xi(t, valueX, true);
+	// If we are on a tabulated value
+	if (x0i == x1i)
+	{
+	    return extrapolateValue(t[x0i].second(), valueY);
+	}
 	row0 = t[x0i].second();
 	row1 = t[x1i].second();
 	//factor for interpolating between both rows
