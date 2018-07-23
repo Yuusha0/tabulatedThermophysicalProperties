@@ -9,3 +9,7 @@ Add uniform search method in the tables (thanks to Jan Gaertner)
 Add bisection search method in the tables
 Add an Allwmake script for compilation
 Add a tutorial case for tabulated properties
+
+2018-07-23 v. 2.0.1
+-------------------
+Fix critical bug in Tderivative function
