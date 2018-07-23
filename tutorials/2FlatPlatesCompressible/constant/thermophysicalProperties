@@ -1,0 +1,115 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5                                     |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermophysicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// CONSTANT PROPERTIES
+
+// thermoType
+// {
+//     type            hePsiThermo;
+//     mixture         pureMixture;
+//     transport       const;
+//     thermo          hConst;
+//     equationOfState perfectGas;
+//     specie          specie;
+//     energy          sensibleInternalEnergy;
+// }
+
+// mixture
+// {
+//     specie
+//     {
+//         molWeight   28.9;
+//     }
+//     thermodynamics
+//     {
+//         Cp          1.05e+03;
+//         Hf          0;
+//     }
+//     transport
+//     {
+//         mu          2.71e-05;
+//         Pr          0.69;
+//     }
+// }
+
+
+// TABULATED  PROPERTIES
+
+/* Tabulated data coming from :
+   Thermal Plasmas : Fundamentals and Applications
+   Maher I. Boulos, Pierre Fauchais, Emil Pfender
+   Springer, Boston, MA, 1994
+   https://doi.org/10.1007/978-1-4899-1337-1 */
+
+
+thermoType
+{
+    type            heTabularThermo;
+    mixture         pureMixture;
+    transport       tabular;
+    thermo          hTabular;
+    equationOfState tabularEOS;
+    specie          specie;
+    energy          sensibleInternalEnergy;
+}
+
+mixture
+{
+    specie
+    {
+        molWeight   28.9;
+    }
+    equationOfState
+    {
+	fileName    "constant/densityTable";
+	outOfBounds extrapolate;
+    }
+    thermodynamics
+    {
+	Cp
+	{
+	    fileName    "constant/cpTable";
+	    outOfBounds extrapolate;
+	}
+	h
+	{
+            fileName    "constant/hTable";
+	    outOfBounds extrapolate;
+	}
+	hf
+	{
+	    Hf          0;
+	}
+    }
+    transport
+    {
+	mu
+	{
+	    fileName    "constant/muTable";
+	    outOfBounds extrapolate;
+        }
+	kappa
+	{
+            fileName    "constant/kappaTable";
+	    outOfBounds extrapolate;
+        }
+
+    }
+}
+
+
+// ************************************************************************* //
