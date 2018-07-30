@@ -97,10 +97,28 @@ class hTabularThermo
 :
     public EquationOfState
 {
+public:
+
+    // Public data types
+
+        //- Enumeration for heat of formation modes
+        enum hfMode
+        {
+            tabulated,         /*!< Use tabulated value for Hf */
+            constant          /*!< Use a constant Hf value */
+        };
+
+
+private:
     // Private data
 
-        //- Heat of formation
-        //  Note: input in [J/kg], but internally uses [J/kmol]
+        //- Heat of formation mode
+        hfMode mode_;
+
+        //- Tabulated heat of formation
+        extrapolation2DTable<scalar> hfTable;
+
+        //- Constant heat of formation
         scalar Hf_;
 
         //- Standard entropy
@@ -119,9 +137,10 @@ class hTabularThermo
         inline hTabularThermo
         (
             const EquationOfState& pt,
-            const scalar Hf,
+            const extrapolation2DTable<scalar> hfTable,
 	    const extrapolation2DTable<scalar> cpTable,
-	    const extrapolation2DTable<scalar> hTable
+	    const extrapolation2DTable<scalar> hTable,
+            const scalar Hf
         );
 
 
@@ -153,6 +172,11 @@ public:
         //- Limit the temperature to be in the range Tlow_ to Thigh_
         inline scalar limit(const scalar) const;
 
+        //- Return the enthalpy of formation mode as a word
+        word hfModeToWord(const hfMode& mode) const;
+
+        //- Return the enthalpy of formation mode as an enumeration
+        hfMode wordToHfMode(const word& mode) const;
 
         // Fundamental properties
 

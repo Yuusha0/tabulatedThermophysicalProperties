@@ -14,9 +14,8 @@ Tabulated thermophysical properties for OpenFOAM 5.x.
 ## INSTALLATION
 
 * Copy the source files in your user OpenFOAM tree (often /home/user/OpenFOAM/user-5.x/)
-* Compile all sources:
-  * Use `wmake libso` in each directory where a Make folder is present
-  * Use `wmakeLnInclude -update .` in src/OpenFOAM directory
+* Compile all sources with ./Allwmake in the src/ directory
+
 
 ## USAGE
 
@@ -47,6 +46,12 @@ Tabulated thermophysical properties for OpenFOAM 5.x.
       * WARN which issues warning and extrapolates value (default)
       * EXTRAPOLATE which extrapolates value
     Be careful when using WARN and log file, log may be very huge.
+    * Add searchMethod value:
+      * simple which looking all over the table
+      *	uniform which is usefull for reguar tables only
+      * bisect which uses a bijection algorithm to find the right value
+    Be careful, uniform does not work on non-uniform table. It is at least 2.5 times faster thant simple for a 238x1 table.
+    Bisection is 1.95 times faster than simple for a 238x1 table.
 
 * If your thermophysical model is not defined:
   * Add it in tabularThermos.C (for single specie)

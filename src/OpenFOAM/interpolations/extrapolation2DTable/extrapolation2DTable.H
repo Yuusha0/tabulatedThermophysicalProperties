@@ -90,10 +90,18 @@ public:
         //- Enumeration for handling out-of-bound values
         enum boundsHandling
         {
-            ERROR,          /*!< Exit with a FatalError */
-            WARN,           /*!< Issue warning and extrapolate value (default) */
-            EXTRAPOLATE           /*!< Extrapolate value to the start/end value */
+            ERROR,         /*!< Exit with a FatalError */
+            WARN,          /*!< Issue warning and extrapolate value (default) */
+            EXTRAPOLATE    /*!< Extrapolate value to the start/end value */
         };
+
+        //- Enumeration for search in the tables
+        enum searchMethod
+	{
+	    simple,  /*!< The whole table's covered */
+	    uniform, /*!< Using constant spacing of the table */
+	    bisect   /*!< Bisection search */
+	};
 
         //- Convenience typedef
         typedef List<Tuple2<scalar, List<Tuple2<scalar, Type> > > > table;
@@ -105,6 +113,9 @@ private:
 
         //- Enumeration for handling out-of-bound values
         boundsHandling boundsHandling_;
+
+        //- Enumeration for search in the table
+        searchMethod searchMethod_;
 
         //- File name
         fileName fileName_;
@@ -150,6 +161,7 @@ public:
         (
             const List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >& values,
             const boundsHandling bounds,
+	    const searchMethod method,
             const fileName& fName,
 	    const Switch isNull
         );
@@ -174,6 +186,12 @@ public:
 
         //- Set the out-of-bounds handling from enum, return previous setting
         boundsHandling outOfBounds(const boundsHandling& bound);
+
+        //- Return the search method as a word
+        word searchMethodToWord(const searchMethod& searchMethod) const;
+
+        //- Return the search method as an enumeration
+        searchMethod wordToSearchMethod(const word& searchMethod) const;
 
         //- Check that list is monotonically increasing
         //  Exit with a FatalError if there is a problem
