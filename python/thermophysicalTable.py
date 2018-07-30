@@ -26,6 +26,7 @@ License
 ################################################################################
 
 from re import sub
+import argparse
 
 class thermophysicalTable() :
     """Base class for manipulate thermophysical table
@@ -56,8 +57,8 @@ class thermophysicalTable() :
             for element in self.table :
                 stringOut=""
                 for elem in element[1][:] :
-                    stringOut += '({:<.{precision}e} {:<.{precision}e}) '.format(float(elem[0]), float(elem[1]), precision=precision)
-                f.write('( {:<.{precision}e} ({}))\n'.format(float(element[0]), stringOut, precision=precision))
+                    stringOut += '({:<#.{precision}g} {:<#.{precision}g}) '.format(float(elem[0]), float(elem[1]), precision=precision)
+                f.write('( {:<#.{precision}g} ({}))\n'.format(float(element[0]), stringOut, precision=precision))
             f.write(')')
 
     def importation(self, fileName, fixValue, sep=',', columns=(0,1)) :
@@ -92,8 +93,18 @@ class thermophysicalTable() :
                     self.table.append([elem[0], [(element[0], elem[1])]])
 
 
+# Main program
+parser = argparse.ArgumentParser()
+parser.add_argument('action', help='Action : import or transpose', choices=['import','transpose'])
+parser.add_argument('fileOut', help='Output file name')
+parser.add_argument('-p', '--precision', help='Write precision', type=int, default=6)
+parser.add_argument('-s', '--separator', help='Separator used in imported file', default=',')
+parser.add_argument('-v', '--value', help='Fixed value when importing table', type=float)
+parser.add_argument('-c', '--columns', help='Tuple of columns to import', default='(0,1)') 
+args = parser.parse_args()
+            
 thermo = thermophysicalTable()
 #thermo.read('hTable_orig')
-thermo.importation(fileName='test.txt',sep=' ', columns=(0,3), fixValue=1.e5)
+#thermo.importation(fileName='test.txt',sep=' ', columns=(0,3), fixValue=1.e5)
 #thermo.transpose()
-thermo.write('cpTable')
+thermo.write(fileName=args.fileOut)
