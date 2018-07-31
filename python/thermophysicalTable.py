@@ -72,10 +72,14 @@ class thermophysicalTable() :
                     tmpList = line.strip().split()
                 else :
                     tmpList = line.strip().split(sep)
-
-                tup=[(fixValue, tmpList[columns[1]])]
-                self.table.append([tmpList[columns[0]], tup])
-
+                try :
+                    float(tmpList[columns[1]])
+                except ValueError :
+                    pass
+                else :
+                    tup=[(fixValue, tmpList[columns[1]])]
+                    self.table.append([tmpList[columns[0]], tup])
+        
     def transpose(self) :
         """ Invert lines and columns in a tabulated thermophysical list """
 
@@ -94,8 +98,9 @@ class thermophysicalTable() :
 
 
 # Main program
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description="Import or transpose files in OpenFOAM extrapolation2DTable format")
 parser.add_argument('action', help='Action : import or transpose', choices=['import','transpose'])
+parser.add_argument('fileIn', help='Input file name')
 parser.add_argument('fileOut', help='Output file name')
 parser.add_argument('-p', '--precision', help='Write precision', type=int, default=6)
 parser.add_argument('-s', '--separator', help='Separator used in imported file', default=',')
@@ -104,7 +109,10 @@ parser.add_argument('-c', '--columns', help='Tuple of columns to import', defaul
 args = parser.parse_args()
             
 thermo = thermophysicalTable()
-#thermo.read('hTable_orig')
-#thermo.importation(fileName='test.txt',sep=' ', columns=(0,3), fixValue=1.e5)
-#thermo.transpose()
+if args.action == "import" :
+    columns=tuple(int(x) for x in args.columns[1:-1].split(","))
+    thermo.importation(fileName=args.fileIn, fixValue=args.value, sep=args.separator, columns=columns)
+else :
+    thermo.read(args.fileIn)
+    thermo.transpose()
 thermo.write(fileName=args.fileOut)
