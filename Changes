@@ -13,3 +13,7 @@ Add a tutorial case for tabulated properties
 2018-07-23 v. 2.0.1
 -------------------
 Fix critical bug in Tderivative function
+
+2018-08-21 v. 2.0.2
+-------------------
+Fix a bug when interpolating tables
