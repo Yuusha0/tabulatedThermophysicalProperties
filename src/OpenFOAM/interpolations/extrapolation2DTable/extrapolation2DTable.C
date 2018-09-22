@@ -368,13 +368,13 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
 
     label limitI = 0;
 
-    if (reverse)
+    if (!reverse)
     {
         limitI = t.size() - 1;
     }
     if (
-        ((valueX>t[limitI].first()) && reverse)
-        || ((valueX<t[limitI].first()) && !reverse)
+        ((valueX>t[limitI].first()) && !reverse)
+        || ((valueX<t[limitI].first()) && reverse)
        )
     {
         switch (boundsHandling_)
@@ -412,6 +412,14 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
 
 	    default:
 	    {
+		if (reverse)
+		{
+		    return 1;
+		}
+		else
+		{
+		    return limitI - 2;
+		}
 		break;
 	    }
         }
@@ -491,7 +499,7 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
 	}
         case extrapolation2DTable::simple:
 	{
-	    if (reverse)
+	    if (!reverse)
 	    {
 		i = 0;
 		while ((i < nX) && (valueX > t[i].first()))
@@ -549,12 +557,17 @@ Type Foam::extrapolation2DTable<Type>::Tderivative
     // If we are on a tabulated value
     if (x0i == x1i)
     {
-	if (x0i != 0)
+	if(x0i == 0)
+	{
+	    x1i = 1;
+	}
+	else if (x1i == t.size() - 1)
+	{
+	    x0i = t.size() - 2;
+	}
+	else
 	{
 	    x0i--;
-	};
-	if (x1i != t.size() - 1)
-	{
 	    x1i++;
 	}
     }
