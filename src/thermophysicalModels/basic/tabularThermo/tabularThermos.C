@@ -57,7 +57,7 @@ namespace Foam
 
 /* * * * * * * * * * * * * * Internal-energy-based * * * * * * * * * * * * * */
 // Some simple combinations for testing purposes
-makeThermo
+makeThermos
 (
     psiThermo,
     heTabularThermo,
@@ -69,7 +69,7 @@ makeThermo
     specie
 );
 
-makeThermo
+makeThermos
 (
     psiThermo,
     hePsiThermo,
@@ -81,7 +81,7 @@ makeThermo
     specie
 );
 
-makeThermo
+makeThermos
 (
     psiThermo,
     hePsiThermo,
@@ -93,7 +93,7 @@ makeThermo
     specie
 );
 
-makeThermo
+makeThermos
 (
     psiThermo,
     hePsiThermo,
@@ -107,7 +107,7 @@ makeThermo
 
 // Usually used for plasmas, using tabulated data
 // This one uses two tables for h(p, T) and T(p, h)
-makeThermo
+makeThermos
 (
     psiThermo,
     heTabularThermo,
@@ -120,7 +120,7 @@ makeThermo
 );
 
 // This one only uses one table for h(p,T) and calculates T(p, h) manually.
-makeThermo
+makeThermos
 (
     psiThermo,
     hePsiThermo,
@@ -132,7 +132,7 @@ makeThermo
     specie
 );
 
-makeThermo
+makeThermos
 (
     rhoThermo,
     heRhoThermo,
