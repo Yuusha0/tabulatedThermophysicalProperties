@@ -118,17 +118,17 @@ private:
         //- Tabulated heat of formation
         extrapolation2DTable<scalar> hfTable;
 
-        //- Constant heat of formation
-        scalar Hf_;
-
-        //- Standard entropy
-        scalar Sf_;
-
         //- Specific heat at constant pressure table
         extrapolation2DTable<scalar> cpTable;
 
         //- Enthalpy polynomial coeffs  [J/kg]
 	extrapolation2DTable<scalar> hTable;
+
+        //- Constant heat of formation
+        scalar Hf_;
+
+        //- Standard entropy
+        scalar Sf_;
 
 
     // Private Member Functions
@@ -170,7 +170,7 @@ public:
         }
 
         //- Limit the temperature to be in the range Tlow_ to Thigh_
-        inline scalar limit(const scalar) const;
+        inline scalar limit(const scalar T) const;
 
         //- Return the enthalpy of formation mode as a word
         word hfModeToWord(const hfMode& mode) const;
@@ -195,6 +195,16 @@ public:
             //- Entropy [J/(kmol K)]
             // Not implemented
             inline scalar S(const scalar p, const scalar T) const;
+
+
+        // Derivative term used for Jacobian
+
+            //- Derivative of Gibbs free energy w.r.t. temperature
+            // Not implemented
+            inline scalar dGdT(const scalar p, const scalar T) const;
+
+            //- Temperature derivative of heat capacity at constant pressure
+            inline scalar dCpdT(const scalar p, const scalar T) const;
 
 
         // I-O

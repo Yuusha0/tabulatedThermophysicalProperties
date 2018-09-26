@@ -53,7 +53,7 @@ namespace Foam
 
 // Reaction thermophysical models
 
-makeReactionThermo
+makeReactionThermos
 (
     rhoThermo,
     rhoReactionThermo,

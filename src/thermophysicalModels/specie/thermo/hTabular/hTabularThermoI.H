@@ -227,6 +227,34 @@ inline Foam::scalar Foam::hTabularThermo<EquationOfState>::S
     return T;
 }
 
+template<class EquationOfState>
+inline Foam::scalar Foam::hTabularThermo<EquationOfState>::dGdT
+(
+    const scalar p,
+    const scalar T
+) const
+{
+    notImplemented
+    (
+        "scalar hTabularThermo<EquationOfState>::"
+        "dGdT(const scalar p, const scalar T) const"
+    );
+    return 0;
+}
+
+template<class EquationOfState>
+inline Foam::scalar Foam::hTabularThermo<EquationOfState>::dCpdT
+(
+    const scalar p,
+    const scalar T
+) const
+{
+    return
+    (
+         cpTable.Tderivative(T, p)
+    );
+}
+
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 

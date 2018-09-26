@@ -150,10 +150,7 @@ void Foam::heTabularThermo<BasicTabularThermo, MixtureType>::correct()
 {
     if (debug)
     {
-        Info
-	    << "entering heTabularThermo<BasicTabularThermo, "
-            << "MixtureType>::correct()"
-            << endl;
+        InfoInFunction << endl;
     }
 
     // force the saving of the old-time values
