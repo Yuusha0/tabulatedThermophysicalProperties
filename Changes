@@ -22,3 +22,7 @@ Fix a bug when interpolating tables
 -----------------
 Change to OpenFOAM-6 version
 Add argument parser to python script
+
+2018-11-12 v. 3.0.1
+-------------------
+Fix a critical bug in bisection method
