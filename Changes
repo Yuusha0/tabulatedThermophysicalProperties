@@ -17,3 +17,7 @@ Fix critical bug in Tderivative function
 2018-08-21 v. 2.0.2
 -------------------
 Fix a bug when interpolating tables
+
+2018-11-12 v. 2.0.3
+-------------------
+Fix a critical bug in bisection method
