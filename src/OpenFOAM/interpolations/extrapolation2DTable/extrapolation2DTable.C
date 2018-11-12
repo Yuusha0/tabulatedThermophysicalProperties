@@ -459,13 +459,13 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
 	    while (n <= t.size())
 	    {
 		i = std::floor((k + j)/2);
-		if (t[i].first() == valueX || (j - k) == 1)
+		if (fabs(t[i].first() - valueX) < SMALL || (j - k) == 1)
 		{
-		    if (t[i].first() > valueX && !reverse)
+		    if (t[i].first() > valueX + SMALL && !reverse && i>0)
 		    {
 			--i;
 		    }
-		    else if (t[i].first() < valueX && reverse)
+		    else if (t[i].first() < valueX - SMALL && reverse && i<nX)
 		    {
 			++i;
 		    }

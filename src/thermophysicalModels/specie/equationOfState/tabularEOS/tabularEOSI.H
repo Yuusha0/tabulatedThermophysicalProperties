@@ -127,7 +127,6 @@ inline Foam::scalar Foam::tabularEOS<Specie>::psi
     scalar T
 ) const
 {
-    // Ok. But I don't know why.
     return rho(p, T) / (p + SMALL);
 }
 
