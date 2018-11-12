@@ -41,10 +41,8 @@ void Foam::extrapolation2DTable<Type>::readTable()
 
     if (this->empty())
     {
-        FatalErrorIn
-        (
-            "Foam::extrapolation2DTable<Type>::readTable()"
-	)   << "table read from " << fName << " is empty" << nl
+        FatalErrorInFunction
+	    << "table read from " << fName << " is empty" << nl
             << exit(FatalError);
     }
 
@@ -158,14 +156,7 @@ Type Foam::extrapolation2DTable<Type>::extrapolateValue
 	{
 	    case extrapolation2DTable::ERROR:
             {
-                FatalErrorIn
-                (
-                    "Foam::extrapolation2DTable<Type>::extrapolateValue"
-                    "("
-                        "List<Tuple2<scalar, Type> >&, "
-                        "const scalar"
-                    ")"
-                )
+                FatalErrorInFunction
 		    << "value (" << lookupValue << ") less than lower "
                     << "bound (" << minLimit << ")" << nl
                     << exit(FatalError);
@@ -173,14 +164,7 @@ Type Foam::extrapolation2DTable<Type>::extrapolateValue
             }
             case extrapolation2DTable::WARN:
             {
-                WarningIn
-                (
-                    "Foam::extrapolation2DTable<Type>::extrapolateValue"
-                    "("
-                        "List<Tuple2<scalar, Type> >&, "
-                        "const scalar"
-                    ")"
-                )
+                WarningInFunction
 		    << "value (" << lookupValue << ") less than lower "
                     << "bound (" << minLimit << ")" << nl
                     << "    extrapolating the first entry"
@@ -205,14 +189,7 @@ Type Foam::extrapolation2DTable<Type>::extrapolateValue
         {
 	    case extrapolation2DTable::ERROR:
             {
-                FatalErrorIn
-                (
-                    "Foam::extrapolation2DTable<Type>::extrapolateValue"
-                    "("
-                        "List<Tuple2<scalar, Type> >&, "
-                        "const scalar"
-                    ")"
-                )
+                FatalErrorInFunction
 		    << "value (" << lookupValue << ") greater than upper "
                     << "bound (" << maxLimit << ")" << nl
                     << exit(FatalError);
@@ -220,14 +197,7 @@ Type Foam::extrapolation2DTable<Type>::extrapolateValue
             }
             case extrapolation2DTable::WARN:
             {
-                WarningIn
-                (
-                    "Foam::extrapolation2DTable<Type>::extrapolateValue"
-                    "("
-                        "List<Tuple2<scalar, Type> >&, "
-                        "const scalar"
-                    ")"
-                )
+                WarningInFunction
 		    << "value (" << lookupValue << ") greater than upper "
                     << "bound (" << maxLimit << ")" << nl
                     << "    Continuing with the last entry"
@@ -326,16 +296,9 @@ Type Foam::extrapolation2DTable<Type>::extrapolateValue
 	   }
 	   if (n > data.size())
 	   {
-	       FatalErrorIn
-	       (
-                   "Foam::extrapolation2DTable<Type>::extrapolateValue"
-                   "("
-		        "List<Tuple2<scalar, Type> >&, "
-                        "const scalar"
-                   ")"
-	       )
-	       << "Bisection algorithm fails " << nl
-	       << exit(FatalError);
+	       FatalErrorInFunction
+		   << "Bisection algorithm fails " << nl
+		   << exit(FatalError);
 	   }
 	   break;
        }
@@ -381,30 +344,14 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
         {
 	    case extrapolation2DTable::ERROR:
             {
-                FatalErrorIn
-                (
-                    "Foam::extrapolation2DTable<Type>::Xi"
-                    "("
-                        "List<Tuple2<scalar, L> >&, "
-                        "const scalar, "
-		        "const bool,"
-                    ")"
-                )
+                FatalErrorInFunction
 		    << "value (" << valueX << ") outside table " << nl
                     << exit(FatalError);
                 break;
             }
             case extrapolation2DTable::WARN:
             {
-                WarningIn
-                (
-                    "Foam::extrapolation2DTable<Type>::Xi"
-                    "("
-                        "List<Tuple2<scalar, L> >&, "
-                        "const scalar, "
-		        "const bool"
-                    ")"
-                )
+                WarningInFunction
 		    << "value (" << valueX << ") outside table " << nl
                     << "    Continuing with the last entry"
                     << endl;
@@ -483,15 +430,7 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
 	    }
 	    if (n > t.size())
 	    {
-		FatalErrorIn
-		(
-                    "Foam::extrapolation2DTable<Type>::Xi"
-                    "("
-                        "List<Tuple2<scalar, Type> >&, "
-                        "const scalar, "
-		        "const bool"
-                    ")"
-		)
+		FatalErrorInFunction
 		    << "Bisection algorithm fails " << nl
                     << exit(FatalError);
 	    }
@@ -535,14 +474,7 @@ Type Foam::extrapolation2DTable<Type>::Tderivative
 
     if (t.size() <= 1)
     {
-	WarningIn
-        (
-            "Type Foam::extrapolation2DTable<Type>::Tderivative"
-            "("
-	        "const scalar, "
-  	        "const scalar"
-            ") const"
-        )
+	WarningInFunction
             << "cannot derivate a zero- or one-sized table - returning zero"
 	    << endl;
 	return pTraits<Type>::zero;
@@ -624,14 +556,7 @@ Type Foam::extrapolation2DTable<Type>::operator()
     const table& t = *this;
     if (nX == 0)
     {
-        WarningIn
-        (
-            "Type Foam::extrapolation2DTable<Type>::operator()"
-            "("
-                "const scalar, "
-                "const scalar"
-            ") const"
-        )
+        WarningInFunction
             << "cannot extrapolate a zero-sized table - returning zero" << endl;
 
         return pTraits<Type>::zero;
@@ -754,13 +679,7 @@ Foam::extrapolation2DTable<Type>::wordToBoundsHandling
     }
     else
     {
-        WarningIn
-        (
-            "Foam::extrapolation2DTable<Type>::wordToBoundsHandling"
-            "("
-            "    const word&"
-            ")"
-        )
+        WarningInFunction
 	    << "bad outOfBounds specifier " << bound << " using 'warn'" << endl;
 
         return extrapolation2DTable::WARN;
@@ -819,13 +738,7 @@ Foam::extrapolation2DTable<Type>::wordToSearchMethod
     }
     else
     {
-        WarningIn
-        (
-            "Foam::extrapolation2DTable<Type>::wordToSearchMethod"
-            "("
-            "    const word&"
-            ")"
-        )
+        WarningInFunction
 	    << "bad searchMethod specifier "
 	    << searchMethod << " using 'simple'" << endl;
 
@@ -1029,10 +942,7 @@ void Foam::extrapolation2DTable<Type>::checkOrder() const
         // avoid duplicate values (divide-by-zero error)
         if (currValue <= prevValue)
         {
-            FatalErrorIn
-            (
-                "Foam::extrapolation2DTable<Type>::checkOrder() const"
-            )
+            FatalErrorInFunction
 		<< "out-of-order value: "
                 << currValue << " at index " << i << nl
                 << exit(FatalError);

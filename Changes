@@ -18,6 +18,7 @@ Fix critical bug in Tderivative function
 -------------------
 Fix a bug when interpolating tables
 
-2018-11-12 v. 2.0.3
--------------------
-Fix a critical bug in bisection method
+2018-09-27 v. 3.0
+-----------------
+Change to OpenFOAM-6 version
+Add argument parser to python script

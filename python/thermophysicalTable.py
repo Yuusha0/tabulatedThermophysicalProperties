@@ -26,6 +26,7 @@ License
 ################################################################################
 
 from re import sub
+import argparse
 
 class thermophysicalTable() :
     """Base class for manipulate thermophysical table
@@ -33,7 +34,6 @@ class thermophysicalTable() :
 
     def __init__(self) :
         self.table = []
-        self.fileName = ''
 
     def read(self, fileName='') :
         """ Read a tabulated thermophysical file and store it into table"""
@@ -42,7 +42,6 @@ class thermophysicalTable() :
             for line in f :
                 tmpList = sub('\(+|\)+', ' ', line).strip().split()
                 try :
-                    count = len(tmpList) - 1
                     tupleList=[]
                     for i in range(1,len(tmpList)-1,2):
                         tupleList.append((tmpList[i], tmpList[i+1]))
@@ -50,7 +49,7 @@ class thermophysicalTable() :
                 except IndexError :
                     continue
 
-    def write(self, fileName='') :
+    def write(self, fileName='', precision=6) :
         """ Write a thermopysical file """
 
         with open(fileName, 'w') as f :
@@ -58,14 +57,29 @@ class thermophysicalTable() :
             for element in self.table :
                 stringOut=""
                 for elem in element[1][:] :
-                    stringOut += '({} {}) '.format(elem[0], elem[1])
-                f.write('( {} ({}))\n'.format(element[0], stringOut))
+                    stringOut += '({:<#.{precision}g} {:<#.{precision}g}) '.format(float(elem[0]), float(elem[1]), precision=precision)
+                f.write('( {:<#.{precision}g} ({}))\n'.format(float(element[0]), stringOut, precision=precision))
             f.write(')')
 
-    def importation(self, fileName='', ext = '') :
+    def importation(self, fileName, fixValue, sep=',', columns=(0,1)) :
         """ Import thermophysical data from a file.
-        Only CSV is implemented yet """
+        Only CSV or equivalent is implemented yet """
 
+        with open(fileName, 'r') as f :
+            for line in f :
+                # Special command when separator is space
+                if sep is ' ' :
+                    tmpList = line.strip().split()
+                else :
+                    tmpList = line.strip().split(sep)
+                try :
+                    float(tmpList[columns[1]])
+                except ValueError :
+                    pass
+                else :
+                    tup=[(fixValue, tmpList[columns[1]])]
+                    self.table.append([tmpList[columns[0]], tup])
+        
     def transpose(self) :
         """ Invert lines and columns in a tabulated thermophysical list """
 
@@ -83,7 +97,22 @@ class thermophysicalTable() :
                     self.table.append([elem[0], [(element[0], elem[1])]])
 
 
+# Main program
+parser = argparse.ArgumentParser(description="Import or transpose files in OpenFOAM extrapolation2DTable format")
+parser.add_argument('action', help='Action : import or transpose', choices=['import','transpose'])
+parser.add_argument('fileIn', help='Input file name')
+parser.add_argument('fileOut', help='Output file name')
+parser.add_argument('-p', '--precision', help='Write precision', type=int, default=6)
+parser.add_argument('-s', '--separator', help='Separator used in imported file', default=',')
+parser.add_argument('-v', '--value', help='Fixed value when importing table', type=float)
+parser.add_argument('-c', '--columns', help='Tuple of columns to import', default='(0,1)') 
+args = parser.parse_args()
+            
 thermo = thermophysicalTable()
-thermo.read('hTable_orig')
-thermo.transpose()
-thermo.write('hTable_transposed')
+if args.action == "import" :
+    columns=tuple(int(x) for x in args.columns[1:-1].split(","))
+    thermo.importation(fileName=args.fileIn, fixValue=args.value, sep=args.separator, columns=columns)
+else :
+    thermo.read(args.fileIn)
+    thermo.transpose()
+thermo.write(fileName=args.fileOut)
