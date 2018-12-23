@@ -47,6 +47,13 @@ graphFormat     raw;
 
 runTimeModifiable true;
 
+libs
+(
+    "libuserspecie.so"
+    "libTabularThermophysicalModels.so"
+    "libtabularReactionThermophysicalModels.so"
+);
+
 functions
 {}
 
