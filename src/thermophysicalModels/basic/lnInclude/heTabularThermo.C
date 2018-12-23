@@ -1,1 +1,0 @@
-../tabularThermo/heTabularThermo.C
