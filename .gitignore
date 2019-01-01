@@ -9,3 +9,6 @@
 
 # Platforms dependant folders
 **/linux*/
+
+# Ignore lnInclude folders, which should be generated during build-time
+lnInclude
