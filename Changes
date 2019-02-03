@@ -26,3 +26,13 @@ Add argument parser to python script
 2018-11-12 v. 3.0.1
 -------------------
 Fix a critical bug in bisection method
+
+2019-02-03 v. 3.1.0
+-------------------
+Update the tutorial
+Improve the git repository by removing unnecessary lnInclude folders
+Fix a bug when density is calculated by interpolated tables instead of
+extrapolated ones
+Fix a bug when the user has the same enthalpy for multiples
+temperatures
+Add a bashrc file

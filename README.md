@@ -13,8 +13,10 @@ Tabulated thermophysical properties for OpenFOAM 5.x. and OpenFOAM 6
   
 ## INSTALLATION
 
-* Copy the source files in your user OpenFOAM tree (often /home/user/OpenFOAM/user-6/)
-* Compile all sources with ./Allwmake in the src/ directory
+* Set the location of the directory in /etc/bashrc file (default
+  $WM_PROJECT_USER_DIR).
+* Source this etc/bashrc file in your user bashrc.  
+* Compile all sources with ./Allwmake in the src/ directory.
 
 
 ## USAGE
@@ -23,7 +25,7 @@ Tabulated thermophysical properties for OpenFOAM 5.x. and OpenFOAM 6
 
 * Pyhton script can import CSV like tables.
 * It can transpose OpenFOAM style 2D tables.
-* Use python3 --help to view syntax and opions.
+* Use python3 --help to view syntax and options.
 
 ### Tabulated thermophysical model
 
