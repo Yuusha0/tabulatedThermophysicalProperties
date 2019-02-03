@@ -6,8 +6,7 @@
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
-#     This file is part of OpenFOAM.
-#     This file is part of tilasoldo and Yuusha contribution to OpenFOAM.
+#     This file is part of tabulatedThermophysicalProperties on OpenFOAM.
 #     It is based on chriss85 contribution for OpenFOAM 2.3.x.
 #
 #     OpenFOAM is free software: you can redistribute it and/or modify it

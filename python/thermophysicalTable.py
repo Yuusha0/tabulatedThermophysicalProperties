@@ -3,12 +3,13 @@
 
 ################################################################################
 '''
-    Copyright (C) 2018 Yuusha
+    Copyright (C) 2018-2019 Yuusha
 '''
 ################################################################################
 '''
 License
-    This file is part of Yuusha contribution to OpenFOAM.
+    This file is part of tabulatedThermophysicalProperties on OpenFOAM.
+    It is based on chriss85 contribution for OpenFOAM 2.3.x.
 
     This contribution is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
