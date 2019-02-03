@@ -177,6 +177,14 @@ Type Foam::extrapolation2DTable<Type>::extrapolateValue
 		scalar x2 = data[1].first();
 		Type y1 = data[0].second();
 		Type y2 = data[1].second();
+		if (x2 == x1)
+		{
+		    FatalErrorInFunction
+			<< "Enthalpy (" << x2 << ") is equal to (" << x1 << ")"
+			<< nl
+			<< "Impossible to calculate the temperature !" << nl
+			<< exit(FatalError);
+		}
 		//extrapolation
                 return y1 + (lookupValue - x1)/(x2 - x1)*(y2 - y1);
                 break;
