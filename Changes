@@ -36,3 +36,10 @@ extrapolated ones
 Fix a bug when the user has the same enthalpy for multiples
 temperatures
 Add a bashrc file
+
+2019-02-03 v. 4.0
+-----------------
+Change out of bounds behaviour
+Add table for density-based solvers
+Minor changes and fixes
+

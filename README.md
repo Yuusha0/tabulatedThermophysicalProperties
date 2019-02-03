@@ -13,8 +13,7 @@ Tabulated thermophysical properties for OpenFOAM 5.x. and OpenFOAM 6
   
 ## INSTALLATION
 
-* Set the location of the directory in /etc/bashrc file (default
-  $WM_PROJECT_USER_DIR).
+* Set the location of the directory in /etc/bashrc file (default $WM_PROJECT_USER_DIR).
 * Source this etc/bashrc file in your user bashrc.  
 * Compile all sources with ./Allwmake in the src/ directory.
 
@@ -43,7 +42,8 @@ Tabulated thermophysical properties for OpenFOAM 5.x. and OpenFOAM 6
     * Add fileName value.
     * Add outOfBounds value:
       * ERROR which exits with a Fatal Error
-      * WARN which issues warning and extrapolates value (default)
+      * CLAMP clamp the values (default)
+      * WARN which issues warning and extrapolates value
       * EXTRAPOLATE which extrapolates value
     * Be careful when using WARN and log file, log may be very huge.
     * Add searchMethod value:
@@ -54,7 +54,7 @@ Tabulated thermophysical properties for OpenFOAM 5.x. and OpenFOAM 6
     * Bisection is 1.95 times faster than simple for a 238x1 table.
 
 * If your thermophysical model is not defined:
-  * Add it in tabularThermos.C (for single specie)
+  * Add it in tabularThermos.C (for compressibility-based solvers) or rhoTabularThermos.C (for density-based solvers)
   * Add it in tabularReactionThermos.C and makeTabularChemistryReaders.C (for multi-species)
 
 ## COMPATIBILITY
@@ -64,6 +64,8 @@ Tabulated thermophysical properties for OpenFOAM 5.x. and OpenFOAM 6
 
 ## MISCELLANEOUS
 
+* Version 4.0 may break backward compatibility. Use version 3.1.0 if you have issues.
+* rhoTabularThermo for density-based solvers is still a beta feature and have not been extensively tested.
 * Multi-species works but it is very slow for large tables due to OpenFOAM code design.
 * Only 1 non reactive model of multi-species is currently implemented.
 
