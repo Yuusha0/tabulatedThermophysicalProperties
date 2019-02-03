@@ -132,19 +132,6 @@ makeThermos
     specie
 );
 
-makeThermos
-(
-    rhoThermo,
-    heRhoThermo,
-    pureMixture,
-    tabularTransport,
-    sensibleInternalEnergy,
-    hTabularThermo,
-    tabularEOS,
-    specie
-);
-
-    
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

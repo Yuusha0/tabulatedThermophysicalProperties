@@ -38,7 +38,7 @@ SourceFiles
 
 #include "fluidThermo.H"
 #include "runTimeSelectionTables.H"
-#include "interpolation2DTable.H"
+#include "extrapolation2DTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,13 +59,13 @@ protected:
     // Protected data
 
         //- Compressibility [s^2/m^2]
-       volScalarField psi_;
+        volScalarField psi_;
 
         //- Dynamic viscosity [kg/m/s]
         volScalarField mu_;
 
         //- Density [kg/m^3]
-        interpolation2DTable<scalar> densityTable;
+        extrapolation2DTable<scalar> densityTable;
 
     // Protected Member Functions
 
