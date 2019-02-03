@@ -60,7 +60,7 @@ Foam::extrapolation2DTable<Type>::extrapolation2DTable()
     boundsHandling_(extrapolation2DTable::WARN),
     searchMethod_(extrapolation2DTable::simple),
     fileName_("fileNameIsUndefined"),
-    reader_(NULL),
+    reader_(nullptr),
     isNull_(true)
 {}
 
@@ -79,7 +79,7 @@ Foam::extrapolation2DTable<Type>::extrapolation2DTable
     boundsHandling_(bounds),
     searchMethod_(method),
     fileName_(fName),
-    reader_(NULL),
+    reader_(nullptr),
     isNull_(isNull)
 {}
 
@@ -162,6 +162,11 @@ Type Foam::extrapolation2DTable<Type>::extrapolateValue
                     << exit(FatalError);
                 break;
             }
+	    case extrapolation2DTable::CLAMP:
+            {
+                return data.first().second();
+                break;
+            }
             case extrapolation2DTable::WARN:
             {
                 WarningInFunction
@@ -170,6 +175,7 @@ Type Foam::extrapolation2DTable<Type>::extrapolateValue
                     << "    extrapolating the first entry"
                     << endl;
                 // fall-through to 'EXTRAPOLATE'
+		[[fallthrough]];
             }
             case extrapolation2DTable::EXTRAPOLATE:
             {
@@ -203,6 +209,11 @@ Type Foam::extrapolation2DTable<Type>::extrapolateValue
                     << exit(FatalError);
                 break;
             }
+	    case extrapolation2DTable::CLAMP:
+            {
+                return data.last().second();
+                break;
+            }
             case extrapolation2DTable::WARN:
             {
                 WarningInFunction
@@ -211,6 +222,7 @@ Type Foam::extrapolation2DTable<Type>::extrapolateValue
                     << "    Continuing with the last entry"
                     << endl;
                 // fall-through to 'EXTRAPOLATE'
+                [[fallthrough]];
             }
             case extrapolation2DTable::EXTRAPOLATE:
             {
@@ -567,7 +579,7 @@ Type Foam::extrapolation2DTable<Type>::operator()
         WarningInFunction
             << "cannot extrapolate a zero-sized table - returning zero" << endl;
 
-        return pTraits<Type>::zero;
+        return Zero;
     }
     else if (nX == 1)
     {
@@ -650,6 +662,11 @@ Foam::word Foam::extrapolation2DTable<Type>::boundsHandlingToWord
             enumName = "error";
             break;
         }
+        case extrapolation2DTable::CLAMP:
+        {
+            enumName = "clamp";
+            break;
+        }
         case extrapolation2DTable::WARN:
         {
             enumName = "warn";
@@ -676,6 +693,10 @@ Foam::extrapolation2DTable<Type>::wordToBoundsHandling
     if (bound == "error")
     {
         return extrapolation2DTable::ERROR;
+    }
+    else if (bound == "clamp")
+    {
+        return extrapolation2DTable::CLAMP;
     }
     else if (bound == "warn")
     {

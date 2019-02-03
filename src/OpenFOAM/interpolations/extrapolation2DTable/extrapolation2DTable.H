@@ -90,9 +90,10 @@ public:
         //- Enumeration for handling out-of-bound values
         enum boundsHandling
         {
-            ERROR,         /*!< Exit with a FatalError */
-            WARN,          /*!< Issue warning and extrapolate value (default) */
-            EXTRAPOLATE    /*!< Extrapolate value to the start/end value */
+            ERROR,         //!< Exit with a FatalError
+            WARN,          //!< Issue warning and extrapolate value (default)
+            EXTRAPOLATE,   //!< Extrapolate value to the start/end value
+	    CLAMP          //!< Clamp value to the start/end value
         };
 
         //- Enumeration for search in the tables
