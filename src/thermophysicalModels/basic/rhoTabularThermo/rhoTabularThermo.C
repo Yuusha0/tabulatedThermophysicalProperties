@@ -84,7 +84,7 @@ Foam::rhoTabularThermo::rhoTabularThermo(const fvMesh& mesh, const word& phaseNa
     ),
     densityTable("constant/densityTable")
 {
-    densityTable.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
+    densityTable.outOfBounds(extrapolation2DTable<scalar>::CLAMP);
 }
 
 

@@ -132,10 +132,7 @@ makeThermos
     specie
 );
 
-<<<<<<< HEAD
-=======
 
->>>>>>> rhoThermo
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
