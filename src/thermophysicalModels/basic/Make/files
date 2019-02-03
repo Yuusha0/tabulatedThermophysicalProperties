@@ -1,4 +1,7 @@
 tabularThermo/tabularThermo.C
 tabularThermo/tabularThermos.C
 
+rhoTabularThermo/rhoTabularThermo.C
+rhoTabularThermo/rhoTabularThermos.C
+
 LIB = $(FOAM_USER_LIBBIN)/libTabularThermophysicalModels

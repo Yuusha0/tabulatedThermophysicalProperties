@@ -2,11 +2,11 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2018 Yuusha and tilasoldo
+    \\  /    A nd           | Copyright (C) 2018-2019 Yuusha and cbunge
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
-    This file is part of tilasoldo and Yuusha contribution to OpenFOAM.
+    This file is part of tabulatedThermophysicalProperties on OpenFOAM.
     It is based on chriss85 contribution for OpenFOAM 2.3.x.
 
     OpenFOAM is free software: you can redistribute it and/or modify it
@@ -24,30 +24,37 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "psiThermo.H"
 #include "rhoThermo.H"
 #include "makeThermo.H"
 
 #include "specie.H"
 #include "perfectGas.H"
 #include "tabularEOS.H"
+#include "incompressiblePerfectGas.H"
+#include "Boussinesq.H"
+#include "rhoConst.H"
+#include "perfectFluid.H"
+#include "PengRobinsonGas.H"
+#include "adiabaticPerfectFluid.H"
+
 #include "hConstThermo.H"
-#include "hPolynomialThermo.H"
-#include "hTabularThermo.H"
-#include "eConstThermo.H"
 #include "janafThermo.H"
+#include "hTabularThermo.H"
 #include "sensibleEnthalpy.H"
 #include "sensibleInternalEnergy.H"
 #include "thermo.H"
 
 #include "constTransport.H"
 #include "sutherlandTransport.H"
-#include "polynomialTransport.H"
 #include "tabularTransport.H"
+
+#include "icoPolynomial.H"
+#include "hPolynomialThermo.H"
+#include "polynomialTransport.H"
 
 #include "hePsiThermo.H"
 #include "heRhoThermo.H"
-#include "heTabularThermo.H"
+#include "heRhoTabularThermo.H"
 #include "pureMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -59,8 +66,8 @@ namespace Foam
 // Some simple combinations for testing purposes
 makeThermos
 (
-    psiThermo,
-    heTabularThermo,
+    rhoThermo,
+    heRhoTabularThermo,
     pureMixture,
     constTransport,
     sensibleInternalEnergy,
@@ -71,20 +78,8 @@ makeThermos
 
 makeThermos
 (
-    psiThermo,
-    hePsiThermo,
-    pureMixture,
-    constTransport,
-    sensibleInternalEnergy,
-    hTabularThermo,
-    perfectGas,
-    specie
-);
-
-makeThermos
-(
-    psiThermo,
-    hePsiThermo,
+    rhoThermo,
+    heRhoTabularThermo,
     pureMixture,
     constTransport,
     sensibleInternalEnergy,
@@ -95,8 +90,8 @@ makeThermos
 
 makeThermos
 (
-    psiThermo,
-    hePsiThermo,
+    rhoThermo,
+    heRhoTabularThermo,
     pureMixture,
     tabularTransport,
     sensibleInternalEnergy,
@@ -109,8 +104,8 @@ makeThermos
 // This one uses two tables for h(p, T) and T(p, h)
 makeThermos
 (
-    psiThermo,
-    heTabularThermo,
+    rhoThermo,
+    heRhoTabularThermo,
     pureMixture,
     tabularTransport,
     sensibleInternalEnergy,
@@ -122,8 +117,8 @@ makeThermos
 // This one only uses one table for h(p,T) and calculates T(p, h) manually.
 makeThermos
 (
-    psiThermo,
-    hePsiThermo,
+    rhoThermo,
+    heRhoThermo,
     pureMixture,
     tabularTransport,
     sensibleInternalEnergy,
@@ -132,10 +127,7 @@ makeThermos
     specie
 );
 
-<<<<<<< HEAD
-=======
-
->>>>>>> rhoThermo
+    
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
