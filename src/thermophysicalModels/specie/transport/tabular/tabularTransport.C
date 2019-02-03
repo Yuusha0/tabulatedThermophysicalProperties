@@ -36,9 +36,9 @@ Foam::tabularTransport<Thermo>::tabularTransport(Istream& is)
 {
     is.check("tabularTransport::tabularTransport(Istream& is)");
     mu_ = extrapolation2DTable<scalar>("constant/muTable");
-    mu_.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
+    mu_.outOfBounds(extrapolation2DTable<scalar>::CLAMP);
     kappa_ = extrapolation2DTable<scalar>("constant/kappaTable");
-    kappa_.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
+    kappa_.outOfBounds(extrapolation2DTable<scalar>::CLAMP);
 }
 
 

@@ -36,7 +36,7 @@ Foam::tabularEOS<Specie>::tabularEOS(Istream& is)
 {
     is.check("tabularEOS<Specie>::tabularEOS(Istream& is)");
     densityTable = extrapolation2DTable<scalar>("constant/densityTable");
-    densityTable.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
+    densityTable.outOfBounds(extrapolation2DTable<scalar>::CLAMP);
 }
 
 

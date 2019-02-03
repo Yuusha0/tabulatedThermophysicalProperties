@@ -70,7 +70,7 @@ Foam::tabularThermo::tabularThermo(const fvMesh& mesh, const word& phaseName)
     ),
     densityTable("constant/densityTable")
 {
-    densityTable.outOfBounds(extrapolation2DTable<scalar>::WARN);
+    densityTable.outOfBounds(extrapolation2DTable<scalar>::CLAMP);
 }
 
 

@@ -45,9 +45,9 @@ Foam::hTabularThermo<EquationOfState>::hTabularThermo
     cpTable = extrapolation2DTable<scalar>("constant/cpTable");
     hTable = extrapolation2DTable<scalar>("constant/hTable");
     hfTable = extrapolation2DTable<scalar>("constant/hfTable");
-    cpTable.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
-    hTable.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
-    hfTable.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
+    cpTable.outOfBounds(extrapolation2DTable<scalar>::CLAMP);
+    hTable.outOfBounds(extrapolation2DTable<scalar>::CLAMP);
+    hfTable.outOfBounds(extrapolation2DTable<scalar>::CLAMP);
 }
 
 

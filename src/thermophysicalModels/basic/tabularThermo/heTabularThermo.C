@@ -127,7 +127,7 @@ Foam::heTabularThermo<BasicTabularThermo, MixtureType>::heTabularThermo
     heThermo<BasicTabularThermo, MixtureType>(mesh, phaseName),
     TTable("constant/TTable")
 {
-    TTable.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
+    TTable.outOfBounds(extrapolation2DTable<scalar>::CLAMP);
 
     calculate();
 

@@ -38,8 +38,8 @@ inline Foam::tabularTransport<Thermo>::tabularTransport
     mu_(mu),
     kappa_(kappa)
 {
-    mu_.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
-    kappa_.outOfBounds(extrapolation2DTable<scalar>::EXTRAPOLATE);
+    mu_.outOfBounds(extrapolation2DTable<scalar>::CLAMP);
+    kappa_.outOfBounds(extrapolation2DTable<scalar>::CLAMP);
 }
 
 
