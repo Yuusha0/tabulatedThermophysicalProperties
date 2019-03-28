@@ -465,6 +465,10 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
 		{
 		    i++;
 		}
+		if (i > 0)
+		{
+		    return --i;
+		}
 	    }
 	    else
 	    {
@@ -472,6 +476,10 @@ Foam::label Foam::extrapolation2DTable<Type>::Xi
 		while ((i > 0) && (valueX < t[i].first()))
 		{
 		    i--;
+		}
+		if (i < nX - 1)
+		{
+		    return ++i;
 		}
 	    }
 	    break;
