@@ -548,6 +548,12 @@ Type Foam::extrapolation2DTable<Type>::Tderivative
 
     label ymin = min(y00, y10);
     label ymax = max(y01, y11);
+    // If we are on a tabulated value
+    if (ymin == ymax)
+    {
+	return row0[ymin].second() + factor
+	    *(row1[ymin].second() - row0[ymin].second());
+    }
     List<vector> points;
     label index = 0;
     for (label i = ymin; i <= ymax; ++i)
@@ -630,6 +636,12 @@ Type Foam::extrapolation2DTable<Type>::operator()
 	label y11 = Xi(row1, valueY, true);
 	label ymin = min(y00, y10);
 	label ymax = max(y01, y11);
+	// If we are on a tabulated value
+	if (ymin == ymax)
+	{
+	    return row0[ymin].second() + factor
+		*(row1[ymin].second() - row0[ymin].second());
+	}
 	List<vector> points;
 	label index = 0;
 	for (label i = ymin; i <= ymax; i++)
