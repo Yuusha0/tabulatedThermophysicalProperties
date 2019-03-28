@@ -58,7 +58,7 @@ Foam::extrapolation2DTable<Type>::extrapolation2DTable()
 :
     List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(),
     boundsHandling_(extrapolation2DTable::WARN),
-    searchMethod_(extrapolation2DTable::simple),
+    searchMethod_(extrapolation2DTable::bisect),
     fileName_("fileNameIsUndefined"),
     reader_(nullptr),
     isNull_(true)
@@ -89,7 +89,7 @@ Foam::extrapolation2DTable<Type>::extrapolation2DTable(const fileName& fName)
 :
     List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(),
     boundsHandling_(extrapolation2DTable::WARN),
-    searchMethod_(extrapolation2DTable::simple),
+    searchMethod_(extrapolation2DTable::bisect),
     fileName_(fName),
     reader_(new openFoamTableReader<Type>(dictionary())),
     isNull_(false)
