@@ -569,6 +569,24 @@ Type Foam::extrapolation2DTable<Type>::Tderivative
 	    index = i - ymin;
 	}
     }
+    // Out of bounds values with clamp method
+    // If valueY is above the table
+    if (index == points.size() - 1)
+    {
+	if (boundsHandling_ == extrapolation2DTable::CLAMP)
+	{
+	    return points[index].z();
+	}
+    }
+    // If valueY is below the table
+    else if (index < 0)
+    {
+	if (boundsHandling_ == extrapolation2DTable::CLAMP)
+	{
+	    return points[0].z();
+	}
+    }
+
     return (points[index + 1].z() - points[index].x())
 	  /(t[x1i].first() - t[x0i].first());
 }
@@ -658,6 +676,23 @@ Type Foam::extrapolation2DTable<Type>::operator()
 	    if (points[i - ymin].y() < valueY)
 	    {
 		index = i - ymin;
+	    }
+	}
+	// Out of bounds values with clamp method
+	// If valueY is above the table
+	if (index == points.size() - 1)
+	{
+	    if (boundsHandling_ == extrapolation2DTable::CLAMP)
+	    {
+		return points[index].z();
+	    }
+	}
+	// If valueY is below the table
+	else if (index < 0)
+	{
+	    if (boundsHandling_ == extrapolation2DTable::CLAMP)
+	    {
+		return points[0].z();
 	    }
 	}
 	return (points[index] + (valueY - points[index].y())
