@@ -59,13 +59,12 @@ Tabulated thermophysical properties for OpenFOAM 5.x. and OpenFOAM 6
 
 ## COMPATIBILITY
 
-* OpenFOAM 5.x users have to use v2.0.2 of tabulatedThermophysicalProperties.
-* v2.0.2 will not be updated. So change your OpenFOAM version to 6 if you can.
+* OpenFOAM 5.x users may have compatibility issues.
+* In that case use v2.0.3.
+* Some updates and bug fixes may not have been backported to v2.x . So change your OpenFOAM version to 6 if you can.
 
 ## MISCELLANEOUS
 
-* Version 4.0 may break backward compatibility. Use version 3.1.0 if you have issues.
-* rhoTabularThermo for density-based solvers is still a beta feature and have not been extensively tested.
 * Multi-species works but it is very slow for large tables due to OpenFOAM code design.
 * Only 1 non reactive model of multi-species is currently implemented.
 

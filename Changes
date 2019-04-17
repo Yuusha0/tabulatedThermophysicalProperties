@@ -43,3 +43,11 @@ Change out of bounds behaviour
 Add table for density-based solvers
 Minor changes and fixes
 
+2019-04-17 v. 4.1
+-----------------
+Change out of bounds behaviour for TTable
+Critical bug fixes for 2D (pressure and temperature) tables
+
+2019-04-17 v. 4.1.1
+-------------------
+Update README and Changes
