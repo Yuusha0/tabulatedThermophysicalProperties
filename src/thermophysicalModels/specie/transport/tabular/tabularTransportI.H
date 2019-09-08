@@ -135,21 +135,6 @@ inline Foam::scalar Foam::tabularTransport<Thermo>::alphah
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Thermo>
-inline Foam::tabularTransport<Thermo>& Foam::tabularTransport<Thermo>::operator=
-(
-    const tabularTransport<Thermo>& pt
-)
-{
-    Thermo::operator=(pt);
-
-    mu_ = pt.mu_;
-    kappa_ = pt.kappa_;
-
-    return *this;
-}
-
-
-template<class Thermo>
 inline void Foam::tabularTransport<Thermo>::operator+=
 (
     const tabularTransport<Thermo>& pt

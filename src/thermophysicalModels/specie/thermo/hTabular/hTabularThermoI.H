@@ -259,24 +259,6 @@ inline Foam::scalar Foam::hTabularThermo<EquationOfState>::dCpdT
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class EquationOfState>
-inline Foam::hTabularThermo<EquationOfState>&
-Foam::hTabularThermo<EquationOfState>::operator=
-(
-    const hTabularThermo<EquationOfState>& pt
-)
-{
-    EquationOfState::operator=(pt);
-
-    hfTable = pt.hfTable;
-    cpTable = pt.cpTable;
-    hTable = pt.hTable;
-    Hf_ = pt.Hf_;
-
-    return *this;
-}
-
-
-template<class EquationOfState>
 inline void Foam::hTabularThermo<EquationOfState>::operator+=
 (
     const hTabularThermo<EquationOfState>& pt
