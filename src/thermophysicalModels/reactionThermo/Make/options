@@ -1,4 +1,5 @@
 EXE_INC = \
+    -Wno-implicit-fallthrough \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(TAB_PROPERTIES)/src/OpenFOAM/lnInclude \
     -I$(TAB_PROPERTIES)/src/thermophysicalModels/basic/lnInclude \
