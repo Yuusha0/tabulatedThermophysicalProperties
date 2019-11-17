@@ -96,31 +96,11 @@ inline Foam::scalar Foam::tabularEOS<Specie>::H
     scalar T
 ) const
 {
-    return p/this->rho(p,T);
+    return 0.;
 }
 
 template<class Specie>
 inline Foam::scalar Foam::tabularEOS<Specie>::Cp
-(
-    scalar p,
-    scalar T
-) const
-{
-    return 0.;
-}
-
-template<class Specie>
-inline Foam::scalar Foam::tabularEOS<Specie>::E
-(
-    scalar p,
-    scalar T
-) const
-{
-    return 0.;
-}
-
-template<class Specie>
-inline Foam::scalar Foam::tabularEOS<Specie>::Cv
 (
     scalar p,
     scalar T
@@ -147,7 +127,7 @@ inline Foam::scalar Foam::tabularEOS<Specie>::psi
     scalar T
 ) const
 {
-    return 0;
+    return rho(p, T) / (p + SMALL);
 }
 
 
@@ -169,7 +149,7 @@ inline Foam::scalar Foam::tabularEOS<Specie>::CpMCv
     scalar T
 ) const
 {
-    return 0;
+    return -(p/sqr(densityTable(T,p)))*densityTable.Tderivative(T,p);
 }
 
 

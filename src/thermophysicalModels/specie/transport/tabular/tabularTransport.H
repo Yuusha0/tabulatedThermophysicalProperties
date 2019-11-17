@@ -148,13 +148,13 @@ public:
             return "tabular<" + Thermo::typeName() + '>';
         }
 
-        //- Dynamic viscosity [kg/m/s]
+        //- Dynamic viscosity [kg/ms]
         inline scalar mu(const scalar p, const scalar T) const;
 
-        //- Thermal conductivity [W/m/K]
+        //- Thermal conductivity [W/mK]
         inline scalar kappa(const scalar p, const scalar T) const;
 
-        //- Thermal diffusivity of enthalpy [kg/m/s]
+        //- Thermal diffusivity of enthalpy [kg/ms]
         inline scalar alphah(const scalar p, const scalar T) const;
 
         // Species diffusivity
@@ -166,7 +166,10 @@ public:
 
     // Member operators
 
+        inline tabularTransport& operator=(const tabularTransport&);
+
         inline void operator+=(const tabularTransport&);
+
         inline void operator*=(const scalar);
 
 

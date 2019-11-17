@@ -180,16 +180,16 @@ public:
 
         // Fundamental properties
 
-            //- Heat capacity at constant pressure [J/kg/K]
+            //- Heat capacity at constant pressure [J/(kmol K)]
             inline scalar Cp(const scalar p, const scalar T) const;
 
-            //- Absolute Enthalpy [J/kg]
+            //- Absolute Enthalpy [J/kmol]
             inline scalar Ha(const scalar p, const scalar T) const;
 
-            //- Sensible enthalpy [J/kg]
+            //- Sensible enthalpy [J/kmol]
             inline scalar Hs(const scalar p, const scalar T) const;
 
-            //- Chemical enthalpy [J/kg]
+            //- Chemical enthalpy [J/kmol]
             inline scalar Hc() const;
 
             //- Entropy [J/(kmol K)]
@@ -197,7 +197,7 @@ public:
             inline scalar S(const scalar p, const scalar T) const;
 
             #include "HtoEthermo.H"
-    
+
 
         // Derivative term used for Jacobian
 
@@ -217,6 +217,7 @@ public:
 
     // Member operators
 
+        inline hTabularThermo& operator=(const hTabularThermo&);
         inline void operator+=(const hTabularThermo&);
         inline void operator*=(const scalar);
 
