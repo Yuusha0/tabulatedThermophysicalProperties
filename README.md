@@ -1,9 +1,9 @@
 # tabulatedThermophysicalProperties
-Tabulated thermophysical properties for OpenFOAM 5.x. and OpenFOAM 6
+Tabulated thermophysical properties for OpenFOAM 7
 
 ## REQUIREMENTS
 
-### OpenFOAM 6
+### OpenFOAM 7
 * https://openfoam.org/
 
 ### Python 3
@@ -59,9 +59,11 @@ Tabulated thermophysical properties for OpenFOAM 5.x. and OpenFOAM 6
 
 ## COMPATIBILITY
 
-* OpenFOAM 5.x users may have compatibility issues.
-* In that case use v2.0.3.
-* Some updates and bug fixes may not have been backported to v2.x . So change your OpenFOAM version to 6 if you can.
+* OpenFOAM 5.x and OpenFOAM 6 users may have compatibility issues.
+* For OpenFOAM 5.x use v2.0.3.
+* For OpenFOAM 6 use v4.x
+* v2.x is no longer supported.
+* Only critical bug fixes are backported to v4.x . So change your OpenFOAM version to 7 if you can.
 
 ## MISCELLANEOUS
 
