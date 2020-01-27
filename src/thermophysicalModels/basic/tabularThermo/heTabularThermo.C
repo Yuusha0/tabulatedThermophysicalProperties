@@ -41,7 +41,7 @@ void Foam::heTabularThermo<BasicTabularThermo, MixtureType>::calculate()
     scalarField& alphaCells = this->alpha_.primitiveFieldRef();
     InfoInFunction << "HeName : " << he << endl;
 
-    if(MixtureType::thermoType::heName() == "e")
+    if(he == "e")
     {
 	forAll(TCells, celli)
 	{
@@ -60,7 +60,7 @@ void Foam::heTabularThermo<BasicTabularThermo, MixtureType>::calculate()
 	    alphaCells[celli] = mixture_.alphah(pCells[celli], TCells[celli]);
 	}
     }
-    else if(MixtureType::thermoType::heName() == "h")
+    else if(he == "h")
     {
 	forAll(TCells, celli)
 	{
@@ -85,6 +85,7 @@ void Foam::heTabularThermo<BasicTabularThermo, MixtureType>::calculate()
 	    << MixtureType::thermoType::heName()
 	    << " Not implemented." << exit(FatalError);
     }
+
     volScalarField::Boundary& pBf =
         this->p_.boundaryFieldRef();
 
@@ -128,18 +129,41 @@ void Foam::heTabularThermo<BasicTabularThermo, MixtureType>::calculate()
         }
         else
         {
-            forAll(pT, facei)
-            {
-                const typename MixtureType::thermoType& mixture_ =
-                    this->patchFaceMixture(patchi, facei);
-		pT[facei] =
-		    this->TTable(pp[facei], phe[facei] + pp[facei]
-			       /mixture_.rho(pp[facei], pT[facei]));
+	    if(he == "e")
+	    {
+		forAll(pT, facei)
+		{
+		    const typename MixtureType::thermoType& mixture_ =
+			this->patchFaceMixture(patchi, facei);
+		    pT[facei] =
+			this->TTable(pp[facei], phe[facei] + pp[facei]
+			     /mixture_.rho(pp[facei], pT[facei]));
 
-                ppsi[facei] = mixture_.psi(pp[facei], pT[facei]);
-                pmu[facei] = mixture_.mu(pp[facei], pT[facei]);
-                palpha[facei] = mixture_.alphah(pp[facei], pT[facei]);
-            }
+		    ppsi[facei] = mixture_.psi(pp[facei], pT[facei]);
+		    pmu[facei] = mixture_.mu(pp[facei], pT[facei]);
+		    palpha[facei] = mixture_.alphah(pp[facei], pT[facei]);
+		}
+	    }
+	    else if(he == "h")
+	    {
+		forAll(pT, facei)
+		{
+		    const typename MixtureType::thermoType& mixture_ =
+			this->patchFaceMixture(patchi, facei);
+		    pT[facei] =
+			this->TTable(pp[facei], phe[facei]);
+		    ppsi[facei] = mixture_.psi(pp[facei], pT[facei]);
+		    pmu[facei] = mixture_.mu(pp[facei], pT[facei]);
+		    palpha[facei] = mixture_.alphah(pp[facei], pT[facei]);
+		}
+	    }
+	    else
+	    {
+		FatalErrorInFunction
+		    << "MixtureType::thermoType::heName() == "
+		    << MixtureType::thermoType::heName()
+		    << " Not implemented." << exit(FatalError);
+	    }
         }
     }
 }
