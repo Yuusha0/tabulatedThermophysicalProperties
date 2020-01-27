@@ -31,6 +31,7 @@ License
 template<class BasicTabularThermo, class MixtureType>
 void Foam::heTabularThermo<BasicTabularThermo, MixtureType>::calculate()
 {
+    const word& he = MixtureType::thermoType::heName();
     const scalarField& hCells = this->he_;
     const scalarField& pCells = this->p_;
 
@@ -38,22 +39,51 @@ void Foam::heTabularThermo<BasicTabularThermo, MixtureType>::calculate()
     scalarField& psiCells = this->psi_.primitiveFieldRef();
     scalarField& muCells = this->mu_.primitiveFieldRef();
     scalarField& alphaCells = this->alpha_.primitiveFieldRef();
+    InfoInFunction << "HeName : " << he << endl;
 
-    forAll(TCells, celli)
+    if(MixtureType::thermoType::heName() == "e")
     {
-        const typename MixtureType::thermoType& mixture_ =
-	    this->cellMixture(celli);
+	forAll(TCells, celli)
+	{
+	    const typename MixtureType::thermoType& mixture_ =
+		this->cellMixture(celli);
 
 	    TCells[celli] = this->TTable
-	   (
-	       pCells[celli],
-	       hCells[celli] + pCells[celli]
-	      /mixture_.rho(pCells[celli], TCells[celli])
-	   );
+	    (
+		pCells[celli],
+		hCells[celli] + pCells[celli]
+		/mixture_.rho(pCells[celli], TCells[celli])
+	    );
 
-        psiCells[celli] = mixture_.psi(pCells[celli], TCells[celli]);
-        muCells[celli] = mixture_.mu(pCells[celli], TCells[celli]);
-        alphaCells[celli] = mixture_.alphah(pCells[celli], TCells[celli]);
+	    psiCells[celli] = mixture_.psi(pCells[celli], TCells[celli]);
+	    muCells[celli] = mixture_.mu(pCells[celli], TCells[celli]);
+	    alphaCells[celli] = mixture_.alphah(pCells[celli], TCells[celli]);
+	}
+    }
+    else if(MixtureType::thermoType::heName() == "h")
+    {
+	forAll(TCells, celli)
+	{
+	    const typename MixtureType::thermoType& mixture_ =
+		this->cellMixture(celli);
+
+	    TCells[celli] = this->TTable
+	    (
+		pCells[celli],
+		hCells[celli]
+	    );
+
+	    psiCells[celli] = mixture_.psi(pCells[celli], TCells[celli]);
+	    muCells[celli] = mixture_.mu(pCells[celli], TCells[celli]);
+	    alphaCells[celli] = mixture_.alphah(pCells[celli], TCells[celli]);
+	}
+    }
+    else
+    {
+	FatalErrorInFunction
+	    << "MixtureType::thermoType::heName() == "
+	    << MixtureType::thermoType::heName()
+	    << " Not implemented." << exit(FatalError);
     }
     volScalarField::Boundary& pBf =
         this->p_.boundaryFieldRef();
