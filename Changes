@@ -51,3 +51,11 @@ Critical bug fixes for 2D (pressure and temperature) tables
 2019-04-17 v. 4.1.1
 -------------------
 Update README and Changes
+
+2020-01-27 v 7.1.0
+------------------
+Update for OpenFOAM-7 compatibility
+Change numerotation which is now $FOAM_VERSION.TableVersion.TablePatch
+Fix compilation warnings
+Fix using table with sensibleEnthalpy model
+Update tutorial

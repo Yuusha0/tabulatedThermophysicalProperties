@@ -61,7 +61,7 @@ Tabulated thermophysical properties for OpenFOAM 7
 
 * OpenFOAM 5.x and OpenFOAM 6 users may have compatibility issues.
 * For OpenFOAM 5.x use v2.0.3.
-* For OpenFOAM 6 use v4.x
+* For OpenFOAM 6 use v4.x or old_OF6 branch on GitHub
 * v2.x is no longer supported.
 * Only critical bug fixes are backported to v4.x . So change your OpenFOAM version to 7 if you can.
 
