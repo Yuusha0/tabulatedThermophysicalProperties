@@ -55,7 +55,7 @@ FoamFile
    Springer, Boston, MA, 1994
    https://doi.org/10.1007/978-1-4899-1337-1 */
 
-
+// sensibleInternalEnergy
 thermoType
 {
     type            heTabularThermo;
@@ -110,6 +110,63 @@ mixture
 
     }
 }
+
+
+// Sensible enthalpy
+// thermoType
+// {
+//     type            heTabularThermo;
+//     mixture         pureMixture;
+//     transport       tabular;
+//     thermo          hTabular;
+//     equationOfState tabularEOS;
+//     specie          specie;
+//     energy          sensibleEnthalpy;
+// }
+
+// mixture
+// {
+//     specie
+//     {
+//         molWeight   28.9;
+//     }
+//     equationOfState
+//     {
+// 	fileName    "constant/densityTable";
+// 	outOfBounds extrapolate;
+//     }
+//     thermodynamics
+//     {
+// 	Cp
+// 	{
+// 	    fileName    "constant/cpTable";
+// 	    outOfBounds extrapolate;
+// 	}
+// 	h
+// 	{
+//             fileName    "constant/hTable";
+// 	    outOfBounds extrapolate;
+// 	}
+// 	hf
+// 	{
+// 	    Hf          0;
+// 	}
+//     }
+//     transport
+//     {
+// 	mu
+// 	{
+// 	    fileName    "constant/muTable";
+// 	    outOfBounds extrapolate;
+//         }
+// 	kappa
+// 	{
+//             fileName    "constant/kappaTable";
+// 	    outOfBounds extrapolate;
+//         }
+
+//     }
+// }
 
 
 // ************************************************************************* //

@@ -26,7 +26,7 @@ solvers
         nCellsInCoarsestLevel 20;
     }
 
-    "(U|e|k|epsilon)"
+    "(U|e|h|k|epsilon)"
     {
         solver          GAMG;
         tolerance       1e-08;
@@ -48,7 +48,7 @@ SIMPLE
     {
         p               1e-3;
         U               1e-4;
-        e               1e-3;
+        "(e|h)"         1e-3;
 
         // possibly check turbulence fields
         "(k|epsilon|omega)" 1e-3;
@@ -65,7 +65,7 @@ relaxationFactors
     {
         p               1;
         U               0.9;
-        e               0.8;
+        "(e|h)"         0.8;
         k               0.9;
         epsilon         0.9;
     }

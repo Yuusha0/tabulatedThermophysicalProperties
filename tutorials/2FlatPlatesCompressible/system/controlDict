@@ -29,9 +29,9 @@ deltaT          1;
 
 writeControl    timeStep;
 
-writeInterval   50;
+writeInterval   100;
 
-purgeWrite      3;
+purgeWrite      10;
 
 writeFormat     ascii;
 
@@ -49,9 +49,8 @@ runTimeModifiable true;
 
 libs
 (
-    "libuserspecie.so"
     "libTabularThermophysicalModels.so"
-    "libtabularReactionThermophysicalModels.so"
+//     "libtabularReactionThermophysicalModels.so"
 );
 
 functions
