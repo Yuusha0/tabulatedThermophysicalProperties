@@ -39,7 +39,6 @@ void Foam::heTabularThermo<BasicTabularThermo, MixtureType>::calculate()
     scalarField& psiCells = this->psi_.primitiveFieldRef();
     scalarField& muCells = this->mu_.primitiveFieldRef();
     scalarField& alphaCells = this->alpha_.primitiveFieldRef();
-    InfoInFunction << "HeName : " << he << endl;
 
     if(he == "e")
     {
