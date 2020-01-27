@@ -101,7 +101,7 @@ makeThermos
 );
 
 // Usually used for plasmas, using tabulated data
-// This one uses two tables for h(p, T) and T(p, h)
+// These use two tables for h(p, T) and T(p, h)
 makeThermos
 (
     rhoThermo,
@@ -109,6 +109,18 @@ makeThermos
     pureMixture,
     tabularTransport,
     sensibleInternalEnergy,
+    hTabularThermo,
+    tabularEOS,
+    specie
+);
+
+makeThermos
+(
+    rhoThermo,
+    heRhoTabularThermo,
+    pureMixture,
+    tabularTransport,
+    sensibleEnthalpy,
     hTabularThermo,
     tabularEOS,
     specie
