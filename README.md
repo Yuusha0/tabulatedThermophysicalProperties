@@ -31,7 +31,7 @@ Tabulated thermophysical properties for OpenFOAM 7
 * Compile your solver with:
   * libTabularThermophysicalModels
   * libuserspecie
-  * libtabularReactionThermophysicalModels (for multi-species simulation)
+  * libtabularReactionThermophysicalModels (for multi-species simulation, must be loaded before "libTabularThermophysicalModels" with dynamic linking)
 
 * Or use dynamic linking by adding these libraries to your controlDict
 

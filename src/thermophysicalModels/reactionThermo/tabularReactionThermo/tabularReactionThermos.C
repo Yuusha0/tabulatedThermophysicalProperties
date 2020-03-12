@@ -38,7 +38,9 @@ License
 #include "tabularTransport.H"
 
 #include "reactingMixture.H"
+#include "singleComponentMixture.H"
 
+#include "tabularThermoPhysicsTypes.H"
 #include "thermoPhysicsTypes.H"
 
 
@@ -66,6 +68,14 @@ makeReactionThermos
     specie
 );
 
+// Single-component thermo for sensible enthalpy
+makeThermoPhysicsReactionThermo
+(
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    tabularHThermoPhysics
+);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

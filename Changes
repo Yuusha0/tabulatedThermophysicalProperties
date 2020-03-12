@@ -59,3 +59,8 @@ Change numerotation which is now $FOAM_VERSION.TableVersion.TablePatch
 Fix compilation warnings
 Fix using table with sensibleEnthalpy model
 Update tutorial
+
+2020-03-12 v 7.1.1
+------------------
+Fix crash with chtMultiRegionFoam
+Update README for multi-species
