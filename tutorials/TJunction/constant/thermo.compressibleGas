@@ -1,0 +1,123 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermo.compressibleGas;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+AR
+{
+    specie
+    {
+        molWeight       39.948;
+    }
+    equationOfState
+    {
+	fileName     "constant/ARdensityTable";
+	outOfBounds  clamp;
+	searchMethod bisect;
+    }
+    thermodynamics
+    {
+	Cp
+	{
+	    fileName     "constant/ARcpTable";
+	    outOfBounds  clamp;
+	    searchMethod bisect;
+        }
+	h
+	{
+            fileName     "constant/ARhTable";
+	    outOfBounds  clamp;
+	    searchMethod bisect;
+        }
+	hf
+	{
+	    Hf          0;
+	}
+    }
+    transport
+    {
+	mu
+	{
+	    fileName     "constant/ARmuTable";
+	    outOfBounds  clamp;
+	    searchMethod bisect;
+        }
+	kappa
+	{
+            fileName     "constant/ARlambdaTable";
+	    outOfBounds  clamp;
+	    searchMethod bisect;
+        }
+    }
+    elements
+    {
+        Ar              1;
+    }
+}
+
+N2
+{
+    specie
+    {
+        molWeight       28.0134;
+    }
+    equationOfState
+    {
+	fileName     "constant/N2densityTable";
+	outOfBounds  clamp;
+	searchMethod bisect;
+    }
+    thermodynamics
+    {
+	Cp
+	{
+	    fileName     "constant/N2cpTable";
+	    outOfBounds  clamp;
+	    searchMethod bisect;
+        }
+	h
+	{
+            fileName     "constant/N2hTable";
+	    outOfBounds  clamp;
+	    searchMethod bisect;
+        }
+	hf
+	{
+	    Hf          0;
+	}
+    }
+    transport
+    {
+	mu
+	{
+	    fileName     "constant/N2muTable";
+	    outOfBounds  clamp;
+	    searchMethod bisect;
+        }
+	kappa
+	{
+            fileName     "constant/N2lambdaTable";
+	    outOfBounds  clamp;
+	    searchMethod bisect;
+        }
+    }
+    elements
+    {
+        N               2;
+    }
+}
+
+
+// ************************************************************************* //

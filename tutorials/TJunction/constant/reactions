@@ -1,0 +1,48 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Reference:
+    Bui-Pham, M. N. (1992).
+    Studies in structures of lam inar hydrocarbon flames.
+    PhD Thesis, University of California, San Diego
+
+Notes:
+    This mechanism was developed for simulating this exact counter-flow flame
+    configuration. It should not be considered general-purpose.
+
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      reactions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+elements
+2
+(
+    N
+    Ar
+);
+
+species
+2
+(
+    N2
+    AR
+);
+
+
+
+reactions
+{}
+
+
+// ************************************************************************* //
