@@ -32,18 +32,21 @@ template<class EquationOfState>
 inline Foam::hTabularThermo<EquationOfState>::hTabularThermo
 (
     const EquationOfState& pt,
+    const hfMode mode,
     const extrapolation2DTable<scalar> hfTable,
     const extrapolation2DTable<scalar> cpTable,
     const extrapolation2DTable<scalar> hTable,
-    const scalar Hf
+    const scalar Hf,
+    const scalar Sf
 )
 :
     EquationOfState(pt),
+    mode_(mode),
     hfTable(hfTable),
     cpTable(cpTable),
     hTable(hTable),
-    Hf_(Hf)
-
+    Hf_(Hf),
+    Sf_(Sf)
 {}
 
 
@@ -56,10 +59,12 @@ inline Foam::hTabularThermo<EquationOfState>::hTabularThermo
 )
 :
     EquationOfState(pt),
+    mode_(pt.mode_),
     hfTable(pt.hfTable),
     cpTable(pt.cpTable),
     hTable(pt.hTable),
-    Hf_(pt.Hf_)
+    Hf_(pt.Hf_),
+    Sf_(pt.Sf_)
 {}
 
 
@@ -71,10 +76,12 @@ inline Foam::hTabularThermo<EquationOfState>::hTabularThermo
 )
 :
     EquationOfState(name, pt),
+    mode_(pt.mode_),
     hfTable(pt.hfTable),
     cpTable(pt.cpTable),
     hTable(pt.hTable),
-    Hf_(pt.Hf_)
+    Hf_(pt.Hf_),
+    Sf_(pt.Sf_)
 {}
 
 
@@ -271,6 +278,7 @@ Foam::hTabularThermo<EquationOfState>::operator=
     cpTable = pt.cpTable;
     hTable = pt.hTable;
     Hf_ = pt.Hf_;
+    Sf_ = pt.Sf_;
 
     return *this;
 }
@@ -295,6 +303,7 @@ inline void Foam::hTabularThermo<EquationOfState>::operator+=
         cpTable = Y1*cpTable + Y2*pt.cpTable;
         hTable = Y1*hTable + Y2*pt.hTable;
 	Hf_ = Y1*Hf_ + Y2*pt.Hf_;
+	Sf_ = Y1*Sf_ + Y2*pt.Sf_;
     }
 }
 
@@ -326,10 +335,12 @@ inline Foam::hTabularThermo<EquationOfState> Foam::operator+
         return hTabularThermo<EquationOfState>
         (
             eofs,
+	    pt1.mode_,
             pt1.hfTable,
             pt1.cpTable,
             pt1.hTable,
-	    pt1.Hf_
+	    pt1.Hf_,
+	    pt1.Sf
         );
     }
     {
@@ -339,10 +350,12 @@ inline Foam::hTabularThermo<EquationOfState> Foam::operator+
         return hTabularThermo<EquationOfState>
         (
             eofs,
+	    pt1.mode_,
             Y1*pt1.hfTable + Y2*pt2.hfTable,
             Y1*pt1.cpTable + Y2*pt2.cpTable,
             Y1*pt1.hTable + Y2*pt2.hTable,
-	    Y1*pt1.Hf_ + Y2*pt2.Hf_
+	    Y1*pt1.Hf_ + Y2*pt2.Hf_,
+	    Y1*pt1.Sf_ + Y2*pt2.Sf_
         );
     }
 }
@@ -358,10 +371,12 @@ inline Foam::hTabularThermo<EquationOfState> Foam::operator*
     return hTabularThermo<EquationOfState>
     (
         s*static_cast<const EquationOfState&>(pt),
+	pt.mode_,
         pt.hfTable,
 	pt.cpTable,
 	pt.hTable,
-	pt.Hf_
+	pt.Hf_,
+	pt.Sf_
     );
 }
 
@@ -385,10 +400,12 @@ inline Foam::hTabularThermo<EquationOfState> Foam::operator==
     return hTabularThermo<EquationOfState>
     (
         eofs,
+	pt2.mode_,
         Y2*pt2.hfTable - Y1*pt1.hfTable,
         Y2*pt2.cpTable - Y1*pt1.cpTable,
         Y2*pt2.hTable  - Y1*pt1.hTable,
-	Y2*pt2.Hf_ - Y1*pt1.Hf_
+	Y2*pt2.Hf_ - Y1*pt1.Hf_,
+	Y2*pt2.Sf_ - Y1*pt1.Sf_
     );
 }
 

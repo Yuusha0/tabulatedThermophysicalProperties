@@ -137,10 +137,12 @@ private:
         inline hTabularThermo
         (
             const EquationOfState& pt,
+	    const hfMode mode,
             const extrapolation2DTable<scalar> hfTable,
 	    const extrapolation2DTable<scalar> cpTable,
 	    const extrapolation2DTable<scalar> hTable,
-            const scalar Hf
+            const scalar Hf,
+	    const scalar Sf
         );
 
 
