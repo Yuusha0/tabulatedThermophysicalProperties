@@ -37,6 +37,7 @@ Foam::tabularEOS<Specie>::tabularEOS(Istream& is)
     is.check("tabularEOS<Specie>::tabularEOS(Istream& is)");
     densityTable = extrapolation2DTable<scalar>("constant/densityTable");
     densityTable.outOfBounds(extrapolation2DTable<scalar>::CLAMP);
+    perfectGas_ = false;
 }
 
 
@@ -44,6 +45,14 @@ template<class Specie>
 Foam::tabularEOS<Specie>::tabularEOS(const dictionary& dict)
 :
     Specie(dict),
+    perfectGas_
+    (
+	dict.subDict("equationOfState").lookupOrDefault<Switch>
+	(
+	    "perfectGas",
+	    false
+	)
+    ),
     densityTable(dict.subDict("equationOfState"))
 {}
 

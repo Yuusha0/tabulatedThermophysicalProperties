@@ -96,6 +96,9 @@ class tabularEOS
 {
     // Private data
 
+        //- "Perfect gaz" model for Cp - Cv
+        Switch perfectGas_;
+
         //- Density table
         extrapolation2DTable<scalar> densityTable;
 
@@ -108,6 +111,7 @@ public:
         inline tabularEOS
 	(
 	    const Specie& sp,
+	    const Switch& perfectGas,
 	    const extrapolation2DTable<scalar>& densityTable
 	);
 

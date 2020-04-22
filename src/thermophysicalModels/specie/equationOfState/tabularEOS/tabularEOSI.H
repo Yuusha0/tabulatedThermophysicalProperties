@@ -32,10 +32,12 @@ template<class Specie>
 inline Foam::tabularEOS<Specie>::tabularEOS
 (
     const Specie& sp,
+    const Switch& perfectGas,
     const extrapolation2DTable<scalar>& densityTable
 )
 :
     Specie(sp),
+    perfectGas_(perfectGas),
     densityTable(densityTable)
 {}
 
@@ -50,6 +52,7 @@ inline Foam::tabularEOS<Specie>::tabularEOS
 )
 :
     Specie(name, ico),
+    perfectGas_(ico.perfectGas_),
     densityTable(ico.densityTable)
 {}
 
@@ -149,7 +152,14 @@ inline Foam::scalar Foam::tabularEOS<Specie>::CpMCv
     scalar T
 ) const
 {
-    return -(p/sqr(densityTable(T,p)))*densityTable.Tderivative(T,p);
+    if (perfectGas_)
+    {
+	return -p/(densityTable(T,p)*T);
+    }
+    else
+    {
+	return -(p/sqr(densityTable(T,p)))*densityTable.Tderivative(T,p);
+    }
 }
 
 
@@ -219,6 +229,7 @@ Foam::tabularEOS<Specie> Foam::operator+
         return tabularEOS<Specie>
         (
             sp,
+	    ico1.perfectGas_,
             ico1.densityTable
         );
     }
@@ -230,6 +241,7 @@ Foam::tabularEOS<Specie> Foam::operator+
         return tabularEOS<Specie>
         (
             sp,
+	    ico1.perfectGas_,
             Y1*ico1.densityTable + Y2*ico2.densityTable
         );
     }
@@ -255,6 +267,7 @@ Foam::tabularEOS<Specie> Foam::operator-
         return tabularEOS<Specie>
         (
             sp,
+	    ico1.perfectGas_,
             ico1.densityTable
         );
     }
@@ -266,6 +279,7 @@ Foam::tabularEOS<Specie> Foam::operator-
         return tabularEOS<Specie>
         (
             sp,
+	    ico1.pefectGas_,
             Y1*ico1.densityTable - Y2*ico2.densityTable
         );
     }
@@ -283,6 +297,7 @@ Foam::tabularEOS<Specie> Foam::operator*
     return tabularEOS<Specie>
     (
         s*static_cast<const Specie&>(ico),
+	ico.perfectGas_,
         ico.densityTable
     );
 }
@@ -307,6 +322,7 @@ Foam::tabularEOS<Specie> Foam::operator==
     return tabularEOS<Specie>
     (
         sp,
+	ico2.perfectGas_,
         Y2*ico2.densityTable - Y1*ico1.densityTable
     );
 }

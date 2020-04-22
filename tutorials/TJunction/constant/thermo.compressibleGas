@@ -26,6 +26,7 @@ AR
 	fileName     "constant/ARdensityTable";
 	outOfBounds  clamp;
 	searchMethod bisect;
+	perfectGas   yes;
     }
     thermodynamics
     {
@@ -78,6 +79,7 @@ N2
 	fileName     "constant/N2densityTable";
 	outOfBounds  clamp;
 	searchMethod bisect;
+	perfectGas   yes;
     }
     thermodynamics
     {
