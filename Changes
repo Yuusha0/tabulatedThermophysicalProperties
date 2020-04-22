@@ -64,3 +64,9 @@ Update tutorial
 ------------------
 Fix crash with chtMultiRegionFoam
 Update README for multi-species
+
+2020-04-22 v 7.2.0
+------------------
+Fix bug with multi-species
+Add tutorial for multi-species simulation
+Add new "perfect gas" model to stabilize some difficult simulations
