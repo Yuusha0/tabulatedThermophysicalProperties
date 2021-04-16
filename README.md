@@ -51,8 +51,8 @@ Tabulated thermophysical properties for OpenFOAM 7
       *	uniform which is usefull for reguar tables only
       * bisect which uses a bijection algorithm to find the right value
     * For equation of state only:
-      * perfectGas yes : for calculation of CP - Cv  like a perfect gas. It may helps to stabilize calculations.
-      * perfectGas no (default) : standard calculation of Cp - Cv, always usable.
+      * perfectGas yes : Use cp - cv = R. It may helps to stabilize calculations.
+      * perfectGas no (default) : Calculation using thermodynamic relations. Only for perfect gas too. Not suitable for real gas.
     * Be careful, uniform does not work on non-uniform table. It is at least 2.5 times faster thant simple for a 238x1 table.
     * Bisection is 1.95 times faster than simple for a 238x1 table.
 
